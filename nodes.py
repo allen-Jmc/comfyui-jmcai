@@ -9,8 +9,15 @@ import io
 from PIL import Image
 import numpy as np
 import torch
+import time
+import datetime
+try:
+    from volcengine.ark.ArkService import ArkService
+except ImportError:
+    ArkService = None
 
-class VolcengineChatAPI:
+
+class VolcengineChat:
     """火山引擎对话(Chat) API节点"""
     
     def __init__(self):
@@ -21,7 +28,7 @@ class VolcengineChatAPI:
         return {
             "required": {
                 "api_key": ("STRING", {"default": "", "multiline": False}),
-                "model": ("STRING", {"default": "doubao-pro"}),
+                "model": ("STRING", {"default": "doubao-pro-4k"}),
                 "prompt": ("STRING", {"default": "", "multiline": True}),
                 "system_prompt": ("STRING", {"default": "", "multiline": True}),
                 "temperature": ("FLOAT", {"default": 0.7, "min": 0.0, "max": 1.0, "step": 0.01}),
@@ -29,15 +36,43 @@ class VolcengineChatAPI:
             },
             "optional": {
                 "image": ("IMAGE", {"default": None}),
+                "image_2": ("IMAGE", {"default": None}),
+                "image_3": ("IMAGE", {"default": None}),
             }
         }
     
     RETURN_TYPES = ("STRING",)
     RETURN_NAMES = ("response",)
     FUNCTION = "generate_chat"
-    CATEGORY = "JmcAI/Doubao"
+    CATEGORY = "JMCAI❤/火山引擎"
     
-    def generate_chat(self, api_key, model, prompt, system_prompt="", temperature=0.7, max_tokens=1024, image=None):
+    def _process_image_content(self, image):
+        """处理 ComfyUI 图像并返回 API 需要的 image_url 字典"""
+        if image is None:
+            return None
+            
+        # 将ComfyUI图像格式转换为PIL图像
+        if len(image.shape) == 4:  # 批量图像，只取第一张
+            img_np = (image[0] * 255).cpu().numpy().astype(np.uint8)
+        else:
+            img_np = (image * 255).cpu().numpy().astype(np.uint8)
+            
+        pil_image = Image.fromarray(img_np)
+        
+        # 将PIL图像转换为Base64
+        buffered = io.BytesIO()
+        pil_image.save(buffered, format="PNG") # 统一转PNG
+        img_base64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
+        
+        return {
+            "type": "image_url",
+            "image_url": {
+                "url": f"data:image/png;base64,{img_base64}",
+                "detail": "high" # 保持高详情，后续可配置
+            }
+        }
+
+    def generate_chat(self, api_key, model, prompt, system_prompt="", temperature=0.7, max_tokens=1024, image=None, image_2=None, image_3=None):
         url = "https://ark.cn-beijing.volces.com/api/v3/chat/completions"
         
         headers = {
@@ -47,52 +82,41 @@ class VolcengineChatAPI:
         
         messages = []
         
-        # 添加系统消息
-        if system_prompt:
+        # 1. 优化：仅在有内容时添加 System Message
+        if system_prompt and system_prompt.strip():
             messages.append({
                 "role": "system",
                 "content": system_prompt
             })
         
-        # 构建用户消息
-        if image is not None:
-            # 将ComfyUI图像格式转换为PIL图像
-            if len(image.shape) == 4:  # 批量图像
-                img_np = (image[0] * 255).cpu().numpy().astype(np.uint8)
-                pil_image = Image.fromarray(img_np)
-            else:
-                img_np = (image * 255).cpu().numpy().astype(np.uint8)
-                pil_image = Image.fromarray(img_np)
-            
-            # 将PIL图像转换为Base64
-            buffered = io.BytesIO()
-            pil_image.save(buffered, format="PNG")
-            img_base64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
-            
-            # 多模态消息（包含图像）
-            user_content = [
-                {
-                    "type": "text",
-                    "text": prompt
-                },
-                {
-                    "type": "image_url",
-                    "image_url": {
-                        "url": f"data:image/png;base64,{img_base64}",
-                        "detail": "high"
-                    }
-                }
-            ]
-            messages.append({
-                "role": "user",
-                "content": user_content
+        # 2. 构建 User Message 内容
+        user_content = []
+        
+        # 2.1 添加文本 (优化：如果 prompt 为空则不添加，但通常 prompt 必填)
+        if prompt:
+            user_content.append({
+                "type": "text",
+                "text": prompt
             })
-        else:
-            # 纯文本消息
-            messages.append({
-                "role": "user",
-                "content": prompt
-            })
+        
+        # 2.2 处理图片 list
+        input_images = [image, image_2, image_3]
+        for img in input_images:
+            img_content = self._process_image_content(img)
+            if img_content:
+                user_content.append(img_content)
+        
+        # 3. 组装消息
+        # 优化：如果是纯文本且没有图片，可以使用简化的字符串 content 格式（虽然 list 格式也兼容）
+        # 但为了统一多模态逻辑，保持 list 格式
+        
+        if not user_content:
+            return ("Error: Prompt cannot be empty.",)
+
+        messages.append({
+            "role": "user",
+            "content": user_content
+        })
         
         data = {
             "model": model,
@@ -264,7 +288,7 @@ class VolcengineImageGenerationBase:
             return (placeholder, f"Error: {str(e)}")
 
 
-class VolcengineSeedream4TextToImage(VolcengineImageGenerationBase):
+class VolcengineTextToImage(VolcengineImageGenerationBase):
     """火山引擎Seedream 4.0文生图节点"""
     
     def __init__(self):
@@ -275,7 +299,7 @@ class VolcengineSeedream4TextToImage(VolcengineImageGenerationBase):
         return {
             "required": {
                 "api_key": ("STRING", {"default": "", "multiline": False}),
-                "model": ("STRING", {"default": "doubao-seedream-4-0-250828", "multiline": False}),
+                "model": ("STRING", {"default": "doubao-seedream-4-0-250828"}),
                 "prompt": ("STRING", {"default": "", "multiline": True}),
                 "size": (cls.get_size_options_4_0(), {"default": "2048×2048 (1:1)"}),
                 "sequential_image_generation": (["auto", "disabled"], {"default": "disabled"}),
@@ -290,7 +314,7 @@ class VolcengineSeedream4TextToImage(VolcengineImageGenerationBase):
     RETURN_TYPES = ("IMAGE", "STRING",)
     RETURN_NAMES = ("image", "info",)
     FUNCTION = "generate_image"
-    CATEGORY = "JmcAI/Doubao"
+    CATEGORY = "JMCAI❤/火山引擎"
     
     def generate_image(self, api_key, model, prompt, size="2048×2048 (1:1)", sequential_image_generation="disabled", seed=-1, watermark=False, max_images=1):
         size_norm = self.normalize_size(size)
@@ -303,7 +327,7 @@ class VolcengineSeedream4TextToImage(VolcengineImageGenerationBase):
         return self.handle_response(response)
 
 
-class VolcengineSeedream4ImageToImage(VolcengineImageGenerationBase):
+class VolcengineImageToImage(VolcengineImageGenerationBase):
     """火山引擎Seedream 4.0图生图节点"""
     
     def __init__(self):
@@ -314,7 +338,7 @@ class VolcengineSeedream4ImageToImage(VolcengineImageGenerationBase):
         return {
             "required": {
                 "api_key": ("STRING", {"default": "", "multiline": False}),
-                "model": ("STRING", {"default": "doubao-seedream-4-0-250828", "multiline": False}),
+                "model": ("STRING", {"default": "doubao-seedream-4-0-250828"}),
                 "prompt": ("STRING", {"default": "", "multiline": True}),
                 "image": ("IMAGE", {"default": None}),
                 "size": (cls.get_size_options_4_0(), {"default": "2048×2048 (1:1)"}),
@@ -330,7 +354,7 @@ class VolcengineSeedream4ImageToImage(VolcengineImageGenerationBase):
     RETURN_TYPES = ("IMAGE", "STRING",)
     RETURN_NAMES = ("image", "info",)
     FUNCTION = "generate_image"
-    CATEGORY = "JmcAI/Doubao"
+    CATEGORY = "JMCAI❤/火山引擎"
     
     def generate_image(self, api_key, model, prompt, image, size="2048×2048 (1:1)", sequential_image_generation="disabled", seed=-1, watermark=False, max_images=1):
         size_norm = self.normalize_size(size)
@@ -352,7 +376,7 @@ class VolcengineSeedream4ImageToImage(VolcengineImageGenerationBase):
         return self.handle_response(response)
 
 
-class VolcengineSeedream4MultiImageFusion(VolcengineImageGenerationBase):
+class VolcengineMultiImageFusion(VolcengineImageGenerationBase):
     """火山引擎Seedream 4.0多图融合节点"""
     
     def __init__(self):
@@ -363,7 +387,7 @@ class VolcengineSeedream4MultiImageFusion(VolcengineImageGenerationBase):
         return {
             "required": {
                 "api_key": ("STRING", {"default": "", "multiline": False}),
-                "model": ("STRING", {"default": "doubao-seedream-4-0-250828", "multiline": False}),
+                "model": ("STRING", {"default": "doubao-seedream-4-0-250828"}),
                 "prompt": ("STRING", {"default": "", "multiline": True}),
                 "images": ("IMAGE", {"default": None}),
                 "size": (cls.get_size_options_4_0(), {"default": "2048×2048 (1:1)"}),
@@ -379,7 +403,7 @@ class VolcengineSeedream4MultiImageFusion(VolcengineImageGenerationBase):
     RETURN_TYPES = ("IMAGE", "STRING",)
     RETURN_NAMES = ("image", "info",)
     FUNCTION = "generate_image"
-    CATEGORY = "JmcAI/Doubao"
+    CATEGORY = "JMCAI❤/火山引擎"
     
     def generate_image(self, api_key, model, prompt, images, size="2048×2048 (1:1)", sequential_image_generation="disabled", seed=-1, watermark=False, max_images=1):
         size_norm = self.normalize_size(size)
@@ -402,7 +426,7 @@ class VolcengineSeedream4MultiImageFusion(VolcengineImageGenerationBase):
         return self.handle_response(response)
 
 
-class VolcengineSeedream4StreamOutput(VolcengineImageGenerationBase):
+class VolcengineStreamOutput(VolcengineImageGenerationBase):
     """火山引擎Seedream 4.0流式输出节点（简化为顺序多图）"""
     
     def __init__(self):
@@ -413,7 +437,7 @@ class VolcengineSeedream4StreamOutput(VolcengineImageGenerationBase):
         return {
             "required": {
                 "api_key": ("STRING", {"default": "", "multiline": False}),
-                "model": ("STRING", {"default": "doubao-seedream-4-0-250828", "multiline": False}),
+                "model": ("STRING", {"default": "doubao-seedream-4-0-250828"}),
                 "prompt": ("STRING", {"default": "", "multiline": True}),
                 "size": (cls.get_size_options_4_0(), {"default": "2048×2048 (1:1)"}),
                 "sequential_image_generation": (["auto", "disabled"], {"default": "auto"}),
@@ -428,7 +452,7 @@ class VolcengineSeedream4StreamOutput(VolcengineImageGenerationBase):
     RETURN_TYPES = ("IMAGE", "STRING",)
     RETURN_NAMES = ("image", "info",)
     FUNCTION = "generate_image"
-    CATEGORY = "JmcAI/Doubao"
+    CATEGORY = "JMCAI❤/火山引擎"
     
     def generate_image(self, api_key, model, prompt, size="2048×2048 (1:1)", sequential_image_generation="auto", seed=-1, watermark=False, max_images=3):
         size_norm = self.normalize_size(size)
@@ -450,20 +474,92 @@ class VolcengineSeedream4StreamOutput(VolcengineImageGenerationBase):
 
 
 
+
+class VolcengineUsage:
+    """火山引擎用量查询节点"""
+    
+    def __init__(self):
+        pass
+        
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "access_key": ("STRING", {"default": "", "multiline": False}),
+                "secret_key": ("STRING", {"default": "", "multiline": False}),
+                "days": ("INT", {"default": 7, "min": 1, "max": 30}),
+            }
+        }
+    
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("usage_info",)
+    FUNCTION = "query_usage"
+    CATEGORY = "JMCAI❤/火山引擎"
+    
+    def query_usage(self, access_key, secret_key, days=7):
+        if ArkService is None:
+            return ("Error: volcengine-python-sdk not installed or import failed.",)
+            
+        try:
+            # 初始化服务
+            ark_service = ArkService()
+            ark_service.set_ak(access_key)
+            ark_service.set_sk(secret_key)
+            ark_service.set_region("cn-beijing") # 默认北京 region
+            
+            # 计算时间范围
+            end_time = int(time.time())
+            start_time = end_time - (days * 86400)
+            
+            # 构建请求参数
+            # 注意：GetUsage 具体参数结构可能随版本变化
+            # 这里参考搜索结果：StartTime, EndTime, Interval
+            
+            params = {
+                "StartTime": start_time,
+                "EndTime": end_time,
+                "Interval": 3600, # 1小时粒度
+                "ProjectName": "default"
+            }
+            
+            # 尝试调用 SDK 的 GetUsage 方法 (通常 SDK 会将 API 映射为 snake_case 方法)
+            # 如果不存在，尝试使用通用的 json 调用
+            if hasattr(ark_service, "get_usage"):
+                response = ark_service.get_usage(params)
+            else:
+                # 通用调用: action, params, body
+                # GetUsage 参数通常在 query 或 body 中，这里尝试 query
+                # 注意：具体是在 params 还是 body 取决于 API 定义，GetUsage 看起来像查询，可能在 params
+                # 但 search result 说 "sent in the request body ... for a POST request"
+                # 所以我们用 json 方法 (POST)
+                response = ark_service.json("GetUsage", {}, params)
+                
+            # 处理响应
+            if "Result" in response:
+                return (json.dumps(response["Result"], indent=2, ensure_ascii=False),)
+            elif "ResponseMetadata" in response and "Error" in response["ResponseMetadata"]:
+                return (f"Error: {response['ResponseMetadata']['Error']['Message']}",)
+            else:
+                return (json.dumps(response, indent=2, ensure_ascii=False),)
+                
+        except Exception as e:
+            return (f"Error: {str(e)}",)
+
+
 # 节点映射
 NODE_CLASS_MAPPINGS = {
-    "VolcengineChatAPI": VolcengineChatAPI,
-    "VolcengineSeedream4TextToImage": VolcengineSeedream4TextToImage,
-    "VolcengineSeedream4ImageToImage": VolcengineSeedream4ImageToImage,
-    "VolcengineSeedream4MultiImageFusion": VolcengineSeedream4MultiImageFusion,
-    "VolcengineSeedream4StreamOutput": VolcengineSeedream4StreamOutput,
+    "JMCAI_Volcengine_Chat": VolcengineChat,
+    "JMCAI_Volcengine_TextToImage": VolcengineTextToImage,
+    "JMCAI_Volcengine_ImageToImage": VolcengineImageToImage,
+    "JMCAI_Volcengine_MultiImageFusion": VolcengineMultiImageFusion,
+    "JMCAI_Volcengine_StreamOutput": VolcengineStreamOutput,
 }
 
 # 节点显示名称映射
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "VolcengineChatAPI": "Doubao Chat（火山引擎对话API）",
-    "VolcengineSeedream4TextToImage": "Doubao Seedream4 文生图",
-    "VolcengineSeedream4ImageToImage": "Doubao Seedream4 图生图",
-    "VolcengineSeedream4MultiImageFusion": "Doubao Seedream4 多图融合",
-    "VolcengineSeedream4StreamOutput": "Doubao Seedream4 流式输出",
+    "JMCAI_Volcengine_Chat": "JMCAI❤ 火山引擎 对话",
+    "JMCAI_Volcengine_TextToImage": "JMCAI❤ 火山引擎 文生图",
+    "JMCAI_Volcengine_ImageToImage": "JMCAI❤ 火山引擎 图生图",
+    "JMCAI_Volcengine_MultiImageFusion": "JMCAI❤ 火山引擎 多图融合",
+    "JMCAI_Volcengine_StreamOutput": "JMCAI❤ 火山引擎 流式输出",
 }

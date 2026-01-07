@@ -4,7 +4,7 @@
   "nodes": [
     {
       "id": 1,
-      "type": "VolcengineSeedream4StreamOutput",
+      "type": "JMCAI_Volcengine_StreamOutput",
       "pos": [360, 260],
       "size": {"0": 460, "1": 320},
       "flags": {},
@@ -24,7 +24,7 @@
         {"name": "image", "type": "IMAGE", "links": [], "slot_index": 0},
         {"name": "info", "type": "STRING", "links": [], "slot_index": 1}
       ],
-      "properties": {"Node name for S&R": "VolcengineSeedream4StreamOutput"},
+      "properties": {"Node name for S&R": "JMCAI_Volcengine_StreamOutput"},
       "widgets_values": [
         "",
         "doubao-seedream-4-0-250828",

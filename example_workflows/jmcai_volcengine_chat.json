@@ -4,7 +4,7 @@
   "nodes": [
     {
       "id": 1,
-      "type": "VolcengineChatAPI",
+      "type": "JMCAI_Volcengine_Chat",
       "pos": [
         300,
         200
@@ -138,7 +138,7 @@
         }
       ],
       "properties": {
-        "Node name for S&R": "VolcengineChatAPI"
+        "Node name for S&R": "JMCAI_Volcengine_Chat"
       },
       "widgets_values": [
         "",

@@ -1,66 +1,146 @@
-# ComfyUI-JmcAI
+# ComfyUI-JMCAI
 
-多平台 AI 节点集合（目前包含火山引擎 Doubao/Seedream 4.0），支持聊天与图片生成。
-后续将逐步扩展到其他平台，统一以 `JmcAI/<平台名>` 分类呈现。
+<div align="center">
 
-## 功能一览
-- Doubao Chat：文本聊天，支持可选图片输入（多模态）
-- Seedream 4.0 文生图（Text-to-Image）
-- Seedream 4.0 图生图（Image-to-Image）
-- Seedream 4.0 多图融合（Multi Image Fusion）
-- Seedream 4.0 流式输出（顺序生成多图）
+**❤ 多平台 AI 节点集合 for ComfyUI**
 
-分类与显示名称：
-- 分类：`JmcAI/Doubao`
-- 节点：
-  - `Doubao Chat（火山引擎对话API）`
-  - `Doubao Seedream4 文生图`
-  - `Doubao Seedream4 图生图`
-  - `Doubao Seedream4 多图融合`
-  - `Doubao Seedream4 流式输出`
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
-## 安装
+</div>
 
-- 通过 ComfyUI-Manager（URL 安装）：
-  1. 打开 ComfyUI-Manager → `Install custom nodes`
-  2. 粘贴仓库地址：`https://github.com/allen-Jmc/comfyui-jmcai`
-  3. 安装完成后重启 ComfyUI
+---
 
-- 手动安装到 `custom_nodes`：
-  - `git clone https://github.com/allen-Jmc/comfyui-jmcai <ComfyUI路径>/custom_nodes/comfyui-jmcai`
-  - 或使用软链接：`ln -s /path/to/comfyui-jmcai <ComfyUI路径>/custom_nodes/comfyui-jmcai`
-  - 安装依赖：`pip install -r <ComfyUI路径>/custom_nodes/comfyui-jmcai/requirements.txt`
+## 📖 简介
 
-## 使用
-- 在左侧节点库或右键菜单搜索 `JmcAI`、`Doubao`、`Seedream4`（或中文关键字）。
-- 每个节点最少需要输入 `api_key`。为安全起见，推荐通过环境变量或 ComfyUI 的安全管理器注入，不要硬编码。
-- Seedream 4.0 尺寸说明见下文“Seedream 4.0 尺寸说明”。
-- 示例工作流位于 `example_workflows/`，包含 Chat、T2I、I2I、多图融合、流式输出。
+ComfyUI-JMCAI 是一个为 ComfyUI 设计的多平台 AI 节点插件，目前支持**火山引擎 Doubao/Seedream 4.0** API。所有节点统一使用 `JMCAI❤/火山引擎` 分类，方便识别和管理。
 
-## Seedream 4.0 尺寸说明
-- 选择方式：预设等级（`1K/2K/4K`）或像素尺寸（如 `2048x2048`），两者不可混用。
-- 预设等级：最长边约 `1K≈1024`、`2K≈2048`、`4K≈4096`，按纵横比自适应宽高。
-- 像素尺寸：固定宽高（例如 `2048x2048`、`2560x1440`、`4096x4096` 等），会规范乘号为小写 `x`。
-- 参考图建议：参考图最长边不要明显超过目标等级；多图融合尽量选择纵横比相近的图片。
-- 常见问题：若返回 400 或无图，检查是否混用尺寸、`api_key` 额度、参考图尺寸与格式。
-- 示例工作流：仓库示例以 `2K` 或 `2048x2048 (1:1)` 为主，可在节点的 `size` 下拉中切换。
+---
 
-## 兼容性
-- ComfyUI：最新 master（2024 年）或 0.1+，建议使用官方发行版。
-- Python：3.10 或 3.11（已验证）；不建议 3.12（生态兼容性未全面验证）。
-- 操作系统：macOS、Linux、Windows（需要联网访问 `ark.cn-beijing.volces.com`）。
-- GPU：非必需；图像生成走云端 API；本地仅进行图像解码与张量转换。
-- 依赖：见下方依赖列表，`torch` 由 ComfyUI 环境提供。
+## ✨ 功能特性
 
-## 依赖
-- `requests`
-- `Pillow`
-- `numpy`
+### 🔥 火山引擎节点
 
+| 节点名称 | 功能描述 | 特性 |
+|:---|:---|:---|
+| **JMCAI❤ 火山引擎 对话** | 多模态对话 | 支持最多 3 张图片输入 |
+| **JMCAI❤ 火山引擎 文生图** | 文本生成图片 | Seedream 4.0，支持多种尺寸 |
+| **JMCAI❤ 火山引擎 图生图** | 图片转换图片 | 基于参考图生成 |
+| **JMCAI❤ 火山引擎 多图融合** | 多图融合生成 | 融合多张图片特征 |
+| **JMCAI❤ 火山引擎 流式输出** | 顺序生成多图 | 渐进式图像生成 |
 
-## 许可证
-- MIT（见 `LICENSE`）
+---
 
-## 版本说明
-- 当前支持：火山引擎 Doubao Chat 与 Seedream 4.0 图片生成相关 API（文生图、图生图、多图融合、流式输出）。
-- 后续：新增其他平台或 API 时将在此章节更新说明。
+## 🚀 安装
+
+### 方法 1: 通过 ComfyUI-Manager (推荐)
+
+1. 打开 ComfyUI-Manager → `Install custom nodes`
+2. 粘贴仓库地址：
+   ```
+   https://github.com/allen-Jmc/comfyui-jmcai
+   ```
+3. 安装完成后重启 ComfyUI
+
+### 方法 2: 手动安装
+
+```bash
+# 克隆到 custom_nodes 目录
+cd <ComfyUI路径>/custom_nodes
+git clone https://github.com/allen-Jmc/comfyui-jmcai
+
+# 安装依赖
+pip install -r comfyui-jmcai/requirements.txt
+```
+
+---
+
+## 📝 使用说明
+
+### 1. 获取 API 密钥
+
+- 访问 [火山引擎控制台](https://console.volcengine.com/ark)
+- 获取您的 **API Key** (Bearer Token)
+- 获取对应的 **Model ID** (推理接入点 ID)
+
+### 2. 在 ComfyUI 中使用
+
+1. 在节点库搜索 `JMCAI` 或 `火山引擎`
+2. 添加所需节点到工作流
+3. **手动填入** API Key 和 Model ID
+4. 配置参数并运行
+
+### 3. 示例工作流
+
+在 `example_workflows/` 目录下提供了完整的示例：
+
+- `jmcai_volcengine_chat.json` - 对话示例
+- `jmcai_volcengine_text_to_image.json` - 文生图示例
+- `jmcai_volcengine_image_to_image.json` - 图生图示例
+- `jmcai_volcengine_multi_image_fusion.json` - 多图融合示例
+- `jmcai_volcengine_stream_output.json` - 流式输出示例
+
+---
+
+## 🎨 Seedream 4.0 尺寸说明
+
+支持多种像素比例：
+- `2048×2048 (1:1)`
+- `2560×1440 (16:9)`
+- `1440×2560 (9:16)`
+- 更多尺寸见节点下拉菜单
+
+---
+
+## 🔧 依赖项
+
+```
+requests>=2.25.0
+Pillow>=9.0.0
+numpy>=1.20.0
+```
+
+---
+
+## 💡 高级特性
+
+### 多模态对话 (3 图支持)
+
+`JMCAI❤ 火山引擎 对话` 节点支持同时输入最多 3 张图片。未连接的端口不会发送数据，自动优化 Token 消耗。
+
+### 终端启动信息
+
+插件加载时会在终端显示彩色 Banner 和节点列表。
+
+---
+
+## 🐛 常见问题
+
+### Q: 如何区分 System Prompt 和 User Prompt？
+**A**: `system_prompt` 用于设定 AI 的角色或规则，`prompt` 用于输入用户的具体问题。
+
+### Q: 模型名称填什么？
+**A**: 填写火山引擎控制台生成的**推理接入点 ID**。
+
+---
+
+## 📄 许可证
+
+本项目采用 [MIT License](LICENSE)。
+
+---
+
+## 🙏 致谢
+
+- [ComfyUI](https://github.com/comfyanonymous/ComfyUI)
+- [火山引擎](https://www.volcengine.com/)
+
+---
+
+<div align="center">
+
+**如果觉得有用，请给个 ⭐ Star！**
+
+Made with ❤ by JMCAI
+
+</div>

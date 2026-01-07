@@ -4,7 +4,7 @@
   "nodes": [
     {
       "id": 1,
-      "type": "VolcengineSeedream4MultiImageFusion",
+      "type": "JMCAI_Volcengine_MultiImageFusion",
       "pos": [340, 260],
       "size": {"0": 460, "1": 320},
       "flags": {},
@@ -25,7 +25,7 @@
         {"name": "image", "type": "IMAGE", "links": [], "slot_index": 0},
         {"name": "info", "type": "STRING", "links": [], "slot_index": 1}
       ],
-      "properties": {"Node name for S&R": "VolcengineSeedream4MultiImageFusion"},
+      "properties": {"Node name for S&R": "JMCAI_Volcengine_MultiImageFusion"},
       "widgets_values": [
         "",
         "doubao-seedream-4-0-250828",
