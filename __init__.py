@@ -41,7 +41,12 @@ def print_startup_info():
     print(f"{TerminalColors.OKCYAN}[JMCAI] Total {loaded_count} nodes loaded successfully. Enjoy! ❤{TerminalColors.ENDC}")
     print(f"{TerminalColors.HEADER}================================================================{TerminalColors.ENDC}")
 
+import os
+
 # Execute output
 print_startup_info()
 
-__all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]
+# 定义绝对路径以确保资源加载
+WEB_DIRECTORY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "web")
+
+__all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "WEB_DIRECTORY"]
