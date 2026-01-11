@@ -1,0 +1,2586 @@
+{
+  "id": "e291ecac-d5fe-4975-bb6a-1d49d452d3fa",
+  "revision": 0,
+  "last_node_id": 143,
+  "last_link_id": 208,
+  "nodes": [
+    {
+      "id": 48,
+      "type": "SaveImage",
+      "pos": [
+        -4553.05923295006,
+        543.2944161350072
+      ],
+      "size": [
+        437.890625,
+        445.875
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "图片",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 142
+        },
+        {
+          "localized_name": "文件名前缀",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": {
+            "name": "filename_prefix"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.7.0",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    },
+    {
+      "id": 83,
+      "type": "ShowText|pysssss",
+      "pos": [
+        -3331.69860069478,
+        531.7391916323106
+      ],
+      "size": [
+        225,
+        180.0625
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 4,
+      "inputs": [
+        {
+          "label": "文本",
+          "localized_name": "文本",
+          "name": "text",
+          "type": "STRING",
+          "link": 146
+        }
+      ],
+      "outputs": [
+        {
+          "label": "字符串",
+          "localized_name": "字符串",
+          "name": "STRING",
+          "shape": 6,
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "展示文本",
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "1.2.5",
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": [
+        "{\"count\": 4, \"sources\": [\"sse_b64\", \"sse_b64\", \"sse_b64\", \"sse_b64\"], \"node\": \"VolcengineTextToImageBatch\"}"
+      ]
+    },
+    {
+      "id": 84,
+      "type": "SaveImage",
+      "pos": [
+        -3052.876102164124,
+        384.68619763174667
+      ],
+      "size": [
+        500.234375,
+        471.4375
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "图片",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 147
+        },
+        {
+          "localized_name": "文件名前缀",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": {
+            "name": "filename_prefix"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.7.0",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    },
+    {
+      "id": 86,
+      "type": "LoadImage",
+      "pos": [
+        -5292.343619095129,
+        2686.2123092318525
+      ],
+      "size": [
+        308.4375,
+        434.4375
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "图像",
+          "name": "image",
+          "type": "COMBO",
+          "widget": {
+            "name": "image"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "选择文件上传",
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "widget": {
+            "name": "upload"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "图像",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            171
+          ]
+        },
+        {
+          "localized_name": "遮罩",
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.7.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "seedream4_imagesToimage_1.png",
+        "image"
+      ]
+    },
+    {
+      "id": 87,
+      "type": "ShowText|pysssss",
+      "pos": [
+        -4824.876114972382,
+        1973.1403375032705
+      ],
+      "size": [
+        225,
+        223.390625
+      ],
+      "flags": {},
+      "order": 29,
+      "mode": 4,
+      "inputs": [
+        {
+          "label": "文本",
+          "localized_name": "文本",
+          "name": "text",
+          "type": "STRING",
+          "link": 152
+        }
+      ],
+      "outputs": [
+        {
+          "label": "字符串",
+          "localized_name": "字符串",
+          "name": "STRING",
+          "shape": 6,
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "展示文本",
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "1.2.5",
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": [
+        "{\"count\": 1, \"sources\": [\"https://ark-content-generation-v2-cn-beijing.tos-cn-beijing.volces.com/doubao-seedream-4-5/HIDDEN_SECRET_0.jpeg"
+      ]
+    },
+    {
+      "id": 89,
+      "type": "SaveImage",
+      "pos": [
+        -4524.658084943304,
+        1847.3326168870421
+      ],
+      "size": [
+        386.96875,
+        400.015625
+      ],
+      "flags": {},
+      "order": 28,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "图片",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 151
+        },
+        {
+          "localized_name": "文件名前缀",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": {
+            "name": "filename_prefix"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.7.0",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    },
+    {
+      "id": 92,
+      "type": "ShowText|pysssss",
+      "pos": [
+        -3256.0541875276376,
+        1854.211758808757
+      ],
+      "size": [
+        413.609375,
+        125
+      ],
+      "flags": {},
+      "order": 31,
+      "mode": 4,
+      "inputs": [
+        {
+          "label": "文本",
+          "localized_name": "文本",
+          "name": "text",
+          "type": "STRING",
+          "link": 155
+        }
+      ],
+      "outputs": [
+        {
+          "label": "字符串",
+          "localized_name": "字符串",
+          "name": "STRING",
+          "shape": 6,
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "展示文本",
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "1.2.5",
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": [
+        "{\"count\": 5, \"sources\": [\"sse_b64\", \"sse_b64\", \"sse_b64\", \"sse_b64\", \"sse_b64\"], \"node\": \"VolcengineImageToImageBatch\"}"
+      ]
+    },
+    {
+      "id": 93,
+      "type": "SaveImage",
+      "pos": [
+        -2787.109044832787,
+        1859.135922589517
+      ],
+      "size": [
+        380.453125,
+        84
+      ],
+      "flags": {},
+      "order": 30,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "图片",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 154
+        },
+        {
+          "localized_name": "文件名前缀",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": {
+            "name": "filename_prefix"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.7.0",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    },
+    {
+      "id": 99,
+      "type": "JMCAI_Volcengine_TextToImage_Single",
+      "pos": [
+        -5308.072829487796,
+        562.530931862084
+      ],
+      "size": [
+        400,
+        450.28125
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "api_key",
+          "name": "api_key",
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "STRING",
+          "widget": {
+            "name": "model"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "prompt",
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "aspect_ratio",
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "widget": {
+            "name": "aspect_ratio"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "size_level",
+          "name": "size_level",
+          "type": "COMBO",
+          "widget": {
+            "name": "size_level"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "optimize_prompt",
+          "name": "optimize_prompt",
+          "type": "COMBO",
+          "widget": {
+            "name": "optimize_prompt"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "watermark",
+          "name": "watermark",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "watermark"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "sequential_gen",
+          "name": "sequential_gen",
+          "type": "COMBO",
+          "widget": {
+            "name": "sequential_gen"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "stream",
+          "name": "stream",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "stream"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "response_format",
+          "name": "response_format",
+          "type": "COMBO",
+          "widget": {
+            "name": "response_format"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            142
+          ]
+        },
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            198
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "allen-Jmc/comfyui-jmcai",
+        "ver": "HIDDEN_SECRET",
+        "Node name for S&R": "JMCAI_Volcengine_TextToImage_Single"
+      },
+      "widgets_values": [
+        "",
+        "",
+        "星际穿越，黑洞，黑洞里冲出一辆快支离破碎的复古列车，抢视觉冲击力，电影大片，末日既视感，动感，对比色，oc渲染，光线追踪，动态模糊，景深，超 surrealist，深蓝，画面通过细腻的丰富的色彩层次塑造主体与场景，质感真实，暗黑风背景的光影效果营造出氛围，整体兼具艺术幻想感，夸张的广角透视效果，耀光，反射，极致的光影，强引力，吞噬",
+        "1:1",
+        "2k",
+        "disabled",
+        false,
+        "disabled",
+        false,
+        "url"
+      ]
+    },
+    {
+      "id": 100,
+      "type": "JMCAI_Volcengine_TextToImage_Batch",
+      "pos": [
+        -3785.418947770573,
+        389.1165170955495
+      ],
+      "size": [
+        400,
+        482.28125
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "api_key",
+          "name": "api_key",
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "STRING",
+          "widget": {
+            "name": "model"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "prompt",
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "aspect_ratio",
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "widget": {
+            "name": "aspect_ratio"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "size_level",
+          "name": "size_level",
+          "type": "COMBO",
+          "widget": {
+            "name": "size_level"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "optimize_prompt",
+          "name": "optimize_prompt",
+          "type": "COMBO",
+          "widget": {
+            "name": "optimize_prompt"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "batch_size",
+          "name": "batch_size",
+          "type": "INT",
+          "widget": {
+            "name": "batch_size"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "watermark",
+          "name": "watermark",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "watermark"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "sequential_gen",
+          "name": "sequential_gen",
+          "type": "COMBO",
+          "widget": {
+            "name": "sequential_gen"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "stream",
+          "name": "stream",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "stream"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "response_format",
+          "name": "response_format",
+          "type": "COMBO",
+          "widget": {
+            "name": "response_format"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            147
+          ]
+        },
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            146
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "allen-Jmc/comfyui-jmcai",
+        "ver": "HIDDEN_SECRET",
+        "Node name for S&R": "JMCAI_Volcengine_TextToImage_Batch"
+      },
+      "widgets_values": [
+        "",
+        "",
+        "生成一组共4张连贯插画，核心为同一庭院一角的四季变迁，以统一风格展现四季独特色彩、元素与氛围",
+        "1:1",
+        "2k",
+        "disabled",
+        4,
+        false,
+        "auto",
+        true,
+        "b64_json"
+      ]
+    },
+    {
+      "id": 101,
+      "type": "JMCAI_Volcengine_ImageToImage_Single",
+      "pos": [
+        -5294.289695798902,
+        1908.5667159372208
+      ],
+      "size": [
+        400,
+        450.28125
+      ],
+      "flags": {},
+      "order": 21,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 202
+        },
+        {
+          "localized_name": "api_key",
+          "name": "api_key",
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "STRING",
+          "widget": {
+            "name": "model"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "prompt",
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "aspect_ratio",
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "widget": {
+            "name": "aspect_ratio"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "size_level",
+          "name": "size_level",
+          "type": "COMBO",
+          "widget": {
+            "name": "size_level"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "optimize_prompt",
+          "name": "optimize_prompt",
+          "type": "COMBO",
+          "widget": {
+            "name": "optimize_prompt"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "watermark",
+          "name": "watermark",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "watermark"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "sequential_gen",
+          "name": "sequential_gen",
+          "type": "COMBO",
+          "widget": {
+            "name": "sequential_gen"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "stream",
+          "name": "stream",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "stream"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "response_format",
+          "name": "response_format",
+          "type": "COMBO",
+          "widget": {
+            "name": "response_format"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            151
+          ]
+        },
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            152
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "allen-Jmc/comfyui-jmcai",
+        "ver": "HIDDEN_SECRET",
+        "Node name for S&R": "JMCAI_Volcengine_ImageToImage_Single"
+      },
+      "widgets_values": [
+        "",
+        "",
+        "生成狗狗趴在草地上的近景画面",
+        "1:1",
+        "2k",
+        "disabled",
+        false,
+        "disabled",
+        false,
+        "url"
+      ]
+    },
+    {
+      "id": 102,
+      "type": "JMCAI_Volcengine_ImageToImage_Batch",
+      "pos": [
+        -3717.881147623133,
+        1847.5818571281202
+      ],
+      "size": [
+        400,
+        482.28125
+      ],
+      "flags": {},
+      "order": 23,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 206
+        },
+        {
+          "localized_name": "api_key",
+          "name": "api_key",
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "STRING",
+          "widget": {
+            "name": "model"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "prompt",
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "aspect_ratio",
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "widget": {
+            "name": "aspect_ratio"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "size_level",
+          "name": "size_level",
+          "type": "COMBO",
+          "widget": {
+            "name": "size_level"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "optimize_prompt",
+          "name": "optimize_prompt",
+          "type": "COMBO",
+          "widget": {
+            "name": "optimize_prompt"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "batch_size",
+          "name": "batch_size",
+          "type": "INT",
+          "widget": {
+            "name": "batch_size"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "watermark",
+          "name": "watermark",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "watermark"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "sequential_gen",
+          "name": "sequential_gen",
+          "type": "COMBO",
+          "widget": {
+            "name": "sequential_gen"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "stream",
+          "name": "stream",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "stream"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "response_format",
+          "name": "response_format",
+          "type": "COMBO",
+          "widget": {
+            "name": "response_format"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            154
+          ]
+        },
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            155
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "allen-Jmc/comfyui-jmcai",
+        "ver": "HIDDEN_SECRET",
+        "Node name for S&R": "JMCAI_Volcengine_ImageToImage_Batch"
+      },
+      "widgets_values": [
+        "",
+        "",
+        "参考这个LOGO，做一套户外运动品牌视觉设计，品牌名称为GREEN，包括包装袋、帽子、纸盒、手环、挂绳等。绿色视觉主色调，趣味、简约现代风格",
+        "1:1",
+        "2k",
+        "disabled",
+        5,
+        false,
+        "auto",
+        true,
+        "b64_json"
+      ]
+    },
+    {
+      "id": 103,
+      "type": "JMCAI_Volcengine_MultiImageFusion_Single",
+      "pos": [
+        -5310.774044779121,
+        3259.603206880547
+      ],
+      "size": [
+        409.8125,
+        450.28125
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 173
+        },
+        {
+          "localized_name": "api_key",
+          "name": "api_key",
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "STRING",
+          "widget": {
+            "name": "model"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "prompt",
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "aspect_ratio",
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "widget": {
+            "name": "aspect_ratio"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "size_level",
+          "name": "size_level",
+          "type": "COMBO",
+          "widget": {
+            "name": "size_level"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "optimize_prompt",
+          "name": "optimize_prompt",
+          "type": "COMBO",
+          "widget": {
+            "name": "optimize_prompt"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "watermark",
+          "name": "watermark",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "watermark"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "sequential_gen",
+          "name": "sequential_gen",
+          "type": "COMBO",
+          "widget": {
+            "name": "sequential_gen"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "stream",
+          "name": "stream",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "stream"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "response_format",
+          "name": "response_format",
+          "type": "COMBO",
+          "widget": {
+            "name": "response_format"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            175
+          ]
+        },
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            174
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "allen-Jmc/comfyui-jmcai",
+        "ver": "HIDDEN_SECRET",
+        "Node name for S&R": "JMCAI_Volcengine_MultiImageFusion_Single"
+      },
+      "widgets_values": [
+        "",
+        "",
+        "将图2的服装换为图1的服装",
+        "1:1",
+        "2k",
+        "disabled",
+        false,
+        "disabled",
+        false,
+        "url"
+      ]
+    },
+    {
+      "id": 111,
+      "type": "LoadImage",
+      "pos": [
+        -4920.512043369197,
+        2674.7843474638585
+      ],
+      "size": [
+        302.359375,
+        428.359375
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "图像",
+          "name": "image",
+          "type": "COMBO",
+          "widget": {
+            "name": "image"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "选择文件上传",
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "widget": {
+            "name": "upload"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "图像",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            172
+          ]
+        },
+        {
+          "localized_name": "遮罩",
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.7.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "seedream4_imagesToimage_2.png",
+        "image"
+      ]
+    },
+    {
+      "id": 114,
+      "type": "JMCAI_ImageBatch_Multi",
+      "pos": [
+        -4541.943192376629,
+        2738.232308119683
+      ],
+      "size": [
+        287.59375,
+        265.3125
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "image_1",
+          "name": "image_1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 171
+        },
+        {
+          "localized_name": "image_2",
+          "name": "image_2",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 172
+        },
+        {
+          "localized_name": "input_count",
+          "name": "input_count",
+          "type": "INT",
+          "widget": {
+            "name": "input_count"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_width",
+          "name": "max_width",
+          "type": "INT",
+          "widget": {
+            "name": "max_width"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_height",
+          "name": "max_height",
+          "type": "INT",
+          "widget": {
+            "name": "max_height"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "method",
+          "name": "method",
+          "type": "COMBO",
+          "widget": {
+            "name": "method"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "upscale_method",
+          "name": "upscale_method",
+          "type": "COMBO",
+          "widget": {
+            "name": "upscale_method"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            173,
+            190
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "allen-Jmc/comfyui-jmcai",
+        "ver": "HIDDEN_SECRET",
+        "Node name for S&R": "JMCAI_ImageBatch_Multi"
+      },
+      "widgets_values": [
+        2,
+        1024,
+        1024,
+        "pad",
+        "lanczos",
+        null
+      ]
+    },
+    {
+      "id": 115,
+      "type": "ShowText|pysssss",
+      "pos": [
+        -4854.905113303678,
+        3316.6591938537276
+      ],
+      "size": [
+        427.578125,
+        149.15625
+      ],
+      "flags": {},
+      "order": 25,
+      "mode": 4,
+      "inputs": [
+        {
+          "label": "文本",
+          "localized_name": "文本",
+          "name": "text",
+          "type": "STRING",
+          "link": 174
+        }
+      ],
+      "outputs": [
+        {
+          "label": "字符串",
+          "localized_name": "字符串",
+          "name": "STRING",
+          "shape": 6,
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "展示文本",
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "1.2.5",
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": [
+        "{\"count\": 1, \"sources\": [\"https://ark-content-generation-v2-cn-beijing.tos-cn-beijing.volces.com/doubao-seedream-4-5/HIDDEN_SECRET_0.jpeg"
+      ]
+    },
+    {
+      "id": 116,
+      "type": "SaveImage",
+      "pos": [
+        -4376.544475430251,
+        3203.3565089044378
+      ],
+      "size": [
+        400.015625,
+        357.609375
+      ],
+      "flags": {},
+      "order": 24,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "图片",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 175
+        },
+        {
+          "localized_name": "文件名前缀",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": {
+            "name": "filename_prefix"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.7.0",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    },
+    {
+      "id": 117,
+      "type": "JMCAI_Volcengine_MultiImageFusion_Batch",
+      "pos": [
+        -3643.0708732985267,
+        3214.601991210214
+      ],
+      "size": [
+        595.765625,
+        482.28125
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 178
+        },
+        {
+          "localized_name": "api_key",
+          "name": "api_key",
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "STRING",
+          "widget": {
+            "name": "model"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "prompt",
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "aspect_ratio",
+          "name": "aspect_ratio",
+          "type": "COMBO",
+          "widget": {
+            "name": "aspect_ratio"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "size_level",
+          "name": "size_level",
+          "type": "COMBO",
+          "widget": {
+            "name": "size_level"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "optimize_prompt",
+          "name": "optimize_prompt",
+          "type": "COMBO",
+          "widget": {
+            "name": "optimize_prompt"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "batch_size",
+          "name": "batch_size",
+          "type": "INT",
+          "widget": {
+            "name": "batch_size"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "watermark",
+          "name": "watermark",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "watermark"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "sequential_gen",
+          "name": "sequential_gen",
+          "type": "COMBO",
+          "widget": {
+            "name": "sequential_gen"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "stream",
+          "name": "stream",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "stream"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "response_format",
+          "name": "response_format",
+          "type": "COMBO",
+          "widget": {
+            "name": "response_format"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            187
+          ]
+        },
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "links": [
+            188
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "allen-Jmc/comfyui-jmcai",
+        "ver": "HIDDEN_SECRET",
+        "Node name for S&R": "JMCAI_Volcengine_MultiImageFusion_Batch"
+      },
+      "widgets_values": [
+        "",
+        "",
+        "生成3张女孩和小狗玩偶在游乐园开心地坐过山车的图片，涵盖早晨、中午、晚上",
+        "1:1",
+        "2k",
+        "disabled",
+        3,
+        false,
+        "auto",
+        true,
+        "b64_json"
+      ]
+    },
+    {
+      "id": 118,
+      "type": "LoadImage",
+      "pos": [
+        -3223.5765521850376,
+        2651.338703714605
+      ],
+      "size": [
+        240.75,
+        366.75
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "图像",
+          "name": "image",
+          "type": "COMBO",
+          "widget": {
+            "name": "image"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "选择文件上传",
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "widget": {
+            "name": "upload"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "图像",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            176
+          ]
+        },
+        {
+          "localized_name": "遮罩",
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.7.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "seedream4_imagesToimage_1.png",
+        "image"
+      ]
+    },
+    {
+      "id": 119,
+      "type": "LoadImage",
+      "pos": [
+        -3626.9767039814233,
+        2635.130299287008
+      ],
+      "size": [
+        302.359375,
+        428.359375
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "图像",
+          "name": "image",
+          "type": "COMBO",
+          "widget": {
+            "name": "image"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "选择文件上传",
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "widget": {
+            "name": "upload"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "图像",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            177
+          ]
+        },
+        {
+          "localized_name": "遮罩",
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.7.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "HIDDEN_SECRET_0.jpeg",
+        "image"
+      ]
+    },
+    {
+      "id": 120,
+      "type": "JMCAI_ImageBatch_Multi",
+      "pos": [
+        -2887.9291331547,
+        2651.9121046263704
+      ],
+      "size": [
+        287.59375,
+        265.3125
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "image_1",
+          "name": "image_1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 176
+        },
+        {
+          "localized_name": "image_2",
+          "name": "image_2",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 177
+        },
+        {
+          "localized_name": "input_count",
+          "name": "input_count",
+          "type": "INT",
+          "widget": {
+            "name": "input_count"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_width",
+          "name": "max_width",
+          "type": "INT",
+          "widget": {
+            "name": "max_width"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_height",
+          "name": "max_height",
+          "type": "INT",
+          "widget": {
+            "name": "max_height"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "method",
+          "name": "method",
+          "type": "COMBO",
+          "widget": {
+            "name": "method"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "upscale_method",
+          "name": "upscale_method",
+          "type": "COMBO",
+          "widget": {
+            "name": "upscale_method"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            178,
+            189
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "allen-Jmc/comfyui-jmcai",
+        "ver": "HIDDEN_SECRET",
+        "Node name for S&R": "JMCAI_ImageBatch_Multi"
+      },
+      "widgets_values": [
+        2,
+        1024,
+        1024,
+        "pad",
+        "lanczos",
+        null
+      ]
+    },
+    {
+      "id": 121,
+      "type": "ShowText|pysssss",
+      "pos": [
+        -3005.9375257805914,
+        3208.7222210587142
+      ],
+      "size": [
+        317.5,
+        228.234375
+      ],
+      "flags": {},
+      "order": 27,
+      "mode": 4,
+      "inputs": [
+        {
+          "label": "文本",
+          "localized_name": "文本",
+          "name": "text",
+          "type": "STRING",
+          "link": 188
+        }
+      ],
+      "outputs": [
+        {
+          "label": "字符串",
+          "localized_name": "字符串",
+          "name": "STRING",
+          "shape": 6,
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "title": "展示文本",
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "1.2.5",
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": [
+        "{\"count\": 3, \"sources\": [\"sse_b64\", \"sse_b64\", \"sse_b64\"], \"node\": \"VolcengineMultiImageFusionBatch\"}"
+      ]
+    },
+    {
+      "id": 122,
+      "type": "SaveImage",
+      "pos": [
+        -2640.9418829167234,
+        3204.046741179208
+      ],
+      "size": [
+        400.015625,
+        406.015625
+      ],
+      "flags": {},
+      "order": 26,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "图片",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 187
+        },
+        {
+          "localized_name": "文件名前缀",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": {
+            "name": "filename_prefix"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.7.0",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ComfyUI"
+      ]
+    },
+    {
+      "id": 124,
+      "type": "PreviewImage",
+      "pos": [
+        -2518.532842284301,
+        2686.5917329917074
+      ],
+      "size": [
+        225,
+        195
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "图像",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 189
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.7.0",
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 125,
+      "type": "PreviewImage",
+      "pos": [
+        -4205.029358460636,
+        2743.27942300151
+      ],
+      "size": [
+        225,
+        135
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "图像",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 190
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.7.0",
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 135,
+      "type": "ShowText|pysssss",
+      "pos": [
+        -4854.915127420508,
+        663.7993373587041
+      ],
+      "size": [
+        268.234375,
+        142.3125
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 9,
+      "mode": 4,
+      "inputs": [
+        {
+          "label": "文本",
+          "localized_name": "文本",
+          "name": "text",
+          "type": "STRING",
+          "link": 198
+        }
+      ],
+      "outputs": [
+        {
+          "label": "字符串",
+          "localized_name": "字符串",
+          "name": "STRING",
+          "shape": 6,
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "title": "展示文本",
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "1.2.5",
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 136,
+      "type": "LoadImage",
+      "pos": [
+        -5264.020729556925,
+        1317.3425306821164
+      ],
+      "size": [
+        260.53125,
+        469.546875
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "图像",
+          "name": "image",
+          "type": "COMBO",
+          "widget": {
+            "name": "image"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "选择文件上传",
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "widget": {
+            "name": "upload"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "图像",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            199
+          ]
+        },
+        {
+          "localized_name": "遮罩",
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.7.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "seedream4_imageToimage.png",
+        "image"
+      ]
+    },
+    {
+      "id": 137,
+      "type": "JMCAI_ImageBatch_Multi",
+      "pos": [
+        -4954.102358359466,
+        1430.6370559806571
+      ],
+      "size": [
+        287.59375,
+        241.3125
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "image_1",
+          "name": "image_1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 199
+        },
+        {
+          "localized_name": "input_count",
+          "name": "input_count",
+          "type": "INT",
+          "widget": {
+            "name": "input_count"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_width",
+          "name": "max_width",
+          "type": "INT",
+          "widget": {
+            "name": "max_width"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_height",
+          "name": "max_height",
+          "type": "INT",
+          "widget": {
+            "name": "max_height"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "method",
+          "name": "method",
+          "type": "COMBO",
+          "widget": {
+            "name": "method"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "upscale_method",
+          "name": "upscale_method",
+          "type": "COMBO",
+          "widget": {
+            "name": "upscale_method"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            201,
+            202
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "allen-Jmc/comfyui-jmcai",
+        "ver": "HIDDEN_SECRET",
+        "Node name for S&R": "JMCAI_ImageBatch_Multi"
+      },
+      "widgets_values": [
+        1,
+        1024,
+        1024,
+        "fit",
+        "nearest-exact",
+        null
+      ]
+    },
+    {
+      "id": 138,
+      "type": "PreviewImage",
+      "pos": [
+        -4526.641992755098,
+        1354.7212417027877
+      ],
+      "size": [
+        225,
+        332.171875
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "图像",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 201
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.7.0",
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 140,
+      "type": "LoadImage",
+      "pos": [
+        -3715.670253163214,
+        1347.5915614137393
+      ],
+      "size": [
+        260.53125,
+        379.546875
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "图像",
+          "name": "image",
+          "type": "COMBO",
+          "widget": {
+            "name": "image"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "选择文件上传",
+          "name": "upload",
+          "type": "IMAGEUPLOAD",
+          "widget": {
+            "name": "upload"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "图像",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            203
+          ]
+        },
+        {
+          "localized_name": "遮罩",
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.7.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "seedream4_imageToimages.png",
+        "image"
+      ]
+    },
+    {
+      "id": 141,
+      "type": "JMCAI_ImageBatch_Multi",
+      "pos": [
+        -3300.929299504568,
+        1387.9656060459356
+      ],
+      "size": [
+        287.59375,
+        241.3125
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "image_1",
+          "name": "image_1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 203
+        },
+        {
+          "localized_name": "input_count",
+          "name": "input_count",
+          "type": "INT",
+          "widget": {
+            "name": "input_count"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_width",
+          "name": "max_width",
+          "type": "INT",
+          "widget": {
+            "name": "max_width"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_height",
+          "name": "max_height",
+          "type": "INT",
+          "widget": {
+            "name": "max_height"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "method",
+          "name": "method",
+          "type": "COMBO",
+          "widget": {
+            "name": "method"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "upscale_method",
+          "name": "upscale_method",
+          "type": "COMBO",
+          "widget": {
+            "name": "upscale_method"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "links": [
+            204,
+            206
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "allen-Jmc/comfyui-jmcai",
+        "ver": "HIDDEN_SECRET",
+        "Node name for S&R": "JMCAI_ImageBatch_Multi"
+      },
+      "widgets_values": [
+        1,
+        1024,
+        1024,
+        "fit",
+        "nearest-exact",
+        null
+      ]
+    },
+    {
+      "id": 142,
+      "type": "PreviewImage",
+      "pos": [
+        -2873.4678212205517,
+        1312.049699044762
+      ],
+      "size": [
+        225,
+        272.171875
+      ],
+      "flags": {},
+      "order": 22,
+      "mode": 4,
+      "inputs": [
+        {
+          "localized_name": "图像",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 204
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.7.0",
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": []
+    }
+  ],
+  "links": [
+    [
+      142,
+      99,
+      0,
+      48,
+      0,
+      "IMAGE"
+    ],
+    [
+      146,
+      100,
+      1,
+      83,
+      0,
+      "STRING"
+    ],
+    [
+      147,
+      100,
+      0,
+      84,
+      0,
+      "IMAGE"
+    ],
+    [
+      151,
+      101,
+      0,
+      89,
+      0,
+      "IMAGE"
+    ],
+    [
+      152,
+      101,
+      1,
+      87,
+      0,
+      "STRING"
+    ],
+    [
+      154,
+      102,
+      0,
+      93,
+      0,
+      "IMAGE"
+    ],
+    [
+      155,
+      102,
+      1,
+      92,
+      0,
+      "STRING"
+    ],
+    [
+      171,
+      86,
+      0,
+      114,
+      0,
+      "IMAGE"
+    ],
+    [
+      172,
+      111,
+      0,
+      114,
+      1,
+      "IMAGE"
+    ],
+    [
+      173,
+      114,
+      0,
+      103,
+      0,
+      "IMAGE"
+    ],
+    [
+      174,
+      103,
+      1,
+      115,
+      0,
+      "STRING"
+    ],
+    [
+      175,
+      103,
+      0,
+      116,
+      0,
+      "IMAGE"
+    ],
+    [
+      176,
+      118,
+      0,
+      120,
+      0,
+      "IMAGE"
+    ],
+    [
+      177,
+      119,
+      0,
+      120,
+      1,
+      "IMAGE"
+    ],
+    [
+      178,
+      120,
+      0,
+      117,
+      0,
+      "IMAGE"
+    ],
+    [
+      187,
+      117,
+      0,
+      122,
+      0,
+      "IMAGE"
+    ],
+    [
+      188,
+      117,
+      1,
+      121,
+      0,
+      "STRING"
+    ],
+    [
+      189,
+      120,
+      0,
+      124,
+      0,
+      "IMAGE"
+    ],
+    [
+      190,
+      114,
+      0,
+      125,
+      0,
+      "IMAGE"
+    ],
+    [
+      198,
+      99,
+      1,
+      135,
+      0,
+      "STRING"
+    ],
+    [
+      199,
+      136,
+      0,
+      137,
+      0,
+      "IMAGE"
+    ],
+    [
+      201,
+      137,
+      0,
+      138,
+      0,
+      "IMAGE"
+    ],
+    [
+      202,
+      137,
+      0,
+      101,
+      0,
+      "IMAGE"
+    ],
+    [
+      203,
+      140,
+      0,
+      141,
+      0,
+      "IMAGE"
+    ],
+    [
+      204,
+      141,
+      0,
+      142,
+      0,
+      "IMAGE"
+    ],
+    [
+      206,
+      141,
+      0,
+      102,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "文身图",
+      "bounding": [
+        -5361.572505590287,
+        448.9982016651526,
+        1315.6928613409073,
+        624.3649513958087
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "文生组图",
+      "bounding": [
+        -3808.6894341535312,
+        297.41016431254417,
+        1309.1619666566876,
+        620.81875
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "图片编辑",
+      "bounding": [
+        -5388.039143628745,
+        1253.6268563713759,
+        1397.2507827799086,
+        1180.5093168185365
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "图生组图",
+      "bounding": [
+        -3798.3735487905396,
+        1158.5544243433608,
+        1605.6606886759237,
+        1204.8066288209711
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 5,
+      "title": "多图参考",
+      "bounding": [
+        -5394.101938316219,
+        2601.970081849227,
+        1488.493671828715,
+        1176.6004551746278
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 6,
+      "title": "多图参考 生组图",
+      "bounding": [
+        -3691.8762322064526,
+        2552.9406056751077,
+        1536.1217459808872,
+        1244.9184464946125
+      ],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "workflowRendererVersion": "Vue",
+    "ds": {
+      "scale": 0.5440086335529948,
+      "offset": [
+        7865.783176825815,
+        -1053.5697423487372
+      ]
+    }
+  },
+  "version": 0.4
+}
