@@ -20,10 +20,26 @@ async function doRun(t) {
         const d = getDeps(output, t.id);
         const p = {};
         d.forEach(i => { p[i] = output[i]; });
-        const x = "tmp_" + Math.floor(Math.random() * 1000);
-        p[x] = { inputs: { images: [String(t.id), 0] }, class_type: "PreviewImage" };
-        await api.fetchApi("/prompt", { method: "POST", body: JSON.stringify({ prompt: p }) });
-    } catch (e) { }
+
+        // 生成一个唯一的临时 ID 供预览节点使用
+        const x = "tmp_preview_" + t.id;
+        p[x] = {
+            inputs: { images: [String(t.id), 0] },
+            class_type: "PreviewImage",
+            _meta: { title: "临时预览" }
+        };
+
+        // 执行请求
+        await api.fetchApi("/prompt", {
+            method: "POST",
+            body: JSON.stringify({
+                prompt: p,
+                front: true // 优先执行
+            })
+        });
+    } catch (e) {
+        console.error("[JMCAI] Preview failed:", e);
+    }
 }
 
 app.registerExtension({
@@ -60,28 +76,19 @@ app.registerExtension({
             const oc = nodeType.prototype.onNodeCreated;
             nodeType.prototype.onNodeCreated = function () {
                 const r = oc ? oc.apply(this, arguments) : undefined;
-                let tm = null;
-                const q = () => {
-                    if (tm) clearTimeout(tm);
-                    tm = setTimeout(() => {
-                        const v = this.widgets.find(x => x.name === "仅预览")?.value;
-                        if (v) doRun(this); else if (app.queuePrompt) app.queuePrompt(0);
-                    }, 500);
-                };
-                const ks = ["裁切范围", "涂鸦透明度", "涂鸦颜色", "目标缩放", "目标尺寸", "对齐倍数", "回贴边界微调"];
+                const ks = ["裁切范围", "涂鸦透明度", "涂鸦颜色", "目标宽度", "目标高度", "强制正方形", "对齐倍数", "回贴边界微调"];
                 this.widgets.forEach(w => {
                     if (ks.includes(w.name)) {
                         const b = w.callback;
                         w.callback = function () {
                             const res = b ? b.apply(this, arguments) : undefined;
-                            q();
+                            // 移除自动触发 Queue，遵循用户手动点击按钮的需求
                             return res;
                         };
                     }
                 });
-                this.addWidget("button", "手动加载预览", null, () => {
-                    const v = this.widgets.find(x => x.name === "仅预览")?.value;
-                    if (v) doRun(this); else if (app.queuePrompt) app.queuePrompt(0);
+                this.addWidget("button", "加载预览图", null, () => {
+                    doRun(this);
                 });
                 return r;
             };

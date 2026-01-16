@@ -1,43 +1,28 @@
 import json
 import requests
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
 import base64
 import io
 import time
 import numpy as np
 import torch
 from PIL import Image
-from ..core.logger import jm_log
-from ..utils.image_utils import process_single_image, process_batch_images
+from ...core.logger import jm_log
+from ...utils.image_utils import process_single_image, process_batch_images
+from .api_base import RemoteAPIBase
 
-class VolcengineImageGenerationBase:
+class VolcengineImageGenerationBase(RemoteAPIBase):
     """火山引擎图片生成API基类"""
     
     def __init__(self):
-        self.session = self._create_session()
-
-    def _create_session(self):
-        session = requests.Session()
-        retry_strategy = Retry(
-            total=3,
-            backoff_factor=1,
-            status_forcelist=[429, 500, 502, 503, 504],
-            allowed_methods=["POST"]
-        )
-        adapter = HTTPAdapter(max_retries=retry_strategy)
-        session.mount("https://", adapter)
-        session.mount("http://", adapter)
-        return session
+        super().__init__()
 
     def post_request(self, url, headers, data, stream=False, timeout=60):
-        """统一的 API 请求处理，带重试和超时"""
+        """覆盖基类方法，加入特定的 SSL 补丁逻辑"""
         try:
-            return self.session.post(url, headers=headers, json=data, stream=stream, timeout=timeout)
+            return super().post_request(url, headers=headers, data=data, stream=stream, timeout=timeout)
         except requests.exceptions.SSLError as e:
-            jm_log("ERROR", "API", f"SSL 握手失败: {str(e)}。尝试降低 SSL 验证安全性（注意：仅作为紧急补丁）")
-            # 某些环境下系统证书链有问题，尝试跳过验证（慎用）
-            return self.session.post(url, headers=headers, json=data, stream=stream, timeout=timeout, verify=False)
+            jm_log("ERROR", "VolcengineAPI", f"SSL 握手失败: {str(e)}。尝试降低 SSL 验证安全性。")
+            return super().post_request(url, headers=headers, data=data, stream=stream, timeout=timeout, verify=False)
         except Exception as e:
             raise e
     

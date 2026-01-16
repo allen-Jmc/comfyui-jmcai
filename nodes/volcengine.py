@@ -5,7 +5,7 @@ import numpy as np
 import base64
 import io
 from PIL import Image
-from .base import VolcengineImageGenerationBase
+from .base.volc_base import VolcengineImageGenerationBase
 from ..core.logger import jm_log, log_full_request, log_full_response, mask_key
 from ..utils.image_utils import process_single_image, process_batch_images
 
@@ -446,3 +446,24 @@ class VolcengineMultiImageFusionBatch(VolcengineImageGenerationBase):
             jm_log("ERROR", "VolcengineMultiImageFusionBatch", f"生成失败: {str(e)}")
             placeholder = torch.zeros((1, 64, 64, 3), dtype=torch.float32)
             return (placeholder, f"Error: {str(e)}")
+
+# 节点注册
+NODE_CLASS_MAPPINGS = {
+    "JMCAI_Volcengine_Chat": VolcengineChat,
+    "JMCAI_Volcengine_TextToImage_Single": VolcengineTextToImageSingle,
+    "JMCAI_Volcengine_TextToImage_Batch": VolcengineTextToImageBatch,
+    "JMCAI_Volcengine_ImageToImage_Single": VolcengineImageToImageSingle,
+    "JMCAI_Volcengine_ImageToImage_Batch": VolcengineImageToImageBatch,
+    "JMCAI_Volcengine_MultiImageFusion_Single": VolcengineMultiImageFusionSingle,
+    "JMCAI_Volcengine_MultiImageFusion_Batch": VolcengineMultiImageFusionBatch,
+}
+
+NODE_DISPLAY_NAME_MAPPINGS = {
+    "JMCAI_Volcengine_Chat": "JMCAI❤ 火山引擎 对话",
+    "JMCAI_Volcengine_TextToImage_Single": "JMCAI❤ 火山引擎 文生图-生成单张图",
+    "JMCAI_Volcengine_TextToImage_Batch": "JMCAI❤ 火山引擎 文生图-生成一组图",
+    "JMCAI_Volcengine_ImageToImage_Single": "JMCAI❤ 火山引擎 图生图-单张图生成单张图",
+    "JMCAI_Volcengine_ImageToImage_Batch": "JMCAI❤ 火山引擎 图生图-单张图生成一组图",
+    "JMCAI_Volcengine_MultiImageFusion_Single": "JMCAI❤ 火山引擎 图生图-多张参考图生成单张图",
+    "JMCAI_Volcengine_MultiImageFusion_Batch": "JMCAI❤ 火山引擎 图生图-多张参考图生成一组图",
+}

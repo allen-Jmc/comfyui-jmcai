@@ -7,12 +7,13 @@ import io
 import time
 from PIL import Image
 from ..core.logger import jm_log, mask_key
+from .base.api_base import RemoteAPIBase
 
-class ModelScopeTextToImage:
+class ModelScopeTextToImage(RemoteAPIBase):
     """魔搭 (ModelScope) 文生图节点储备"""
     
     def __init__(self):
-        pass
+        super().__init__()
         
     def log(self, level, message):
         jm_log(level, "ModelScopeTextToImage", message)
@@ -66,7 +67,7 @@ class ModelScopeTextToImage:
         if seed != -1: data["seed"] = int(seed)
 
         try:
-            response = requests.post(f"{base_url}v1/images/generations", headers=headers, json=data)
+            response = self.post_request(f"{base_url}v1/images/generations", headers=headers, data=data)
             response.raise_for_status()
             res_json = response.json()
             task_id = res_json.get("task_id")
@@ -76,7 +77,7 @@ class ModelScopeTextToImage:
             self.log("INFO", f"任务已提交，ID: {task_id}，开始轮询状态...")
 
             for i in range(60):
-                poll_resp = requests.get(f"{base_url}v1/tasks/{task_id}", headers=poll_headers)
+                poll_resp = self.get_request(f"{base_url}v1/tasks/{task_id}", headers=poll_headers)
                 poll_resp.raise_for_status()
                 data_json = poll_resp.json()
                 status = data_json.get("task_status")
@@ -112,11 +113,11 @@ class ModelScopeTextToImage:
             return (batch_tensor, info)
         return (torch.zeros((1, 64, 64, 3)), "Error: No images found.")
 
-class ModelScopeChat:
+class ModelScopeChat(RemoteAPIBase):
     """魔搭 (ModelScope) 多模态 LLM 节点"""
     
     def __init__(self):
-        pass
+        super().__init__()
         
     @classmethod
     def INPUT_TYPES(cls):
@@ -189,7 +190,7 @@ class ModelScopeChat:
         }
 
         try:
-            response = requests.post(url, headers=headers, json=data)
+            response = self.post_request(url, headers=headers, data=data)
             response.raise_for_status()
             result = response.json()
             if "choices" in result and len(result["choices"]) > 0:
@@ -199,3 +200,14 @@ class ModelScopeChat:
         except Exception as e:
             jm_log("ERROR", "ModelScopeChat", f"请求异常: {str(e)}")
             return (f"Error: {str(e)}",)
+
+# 节点注册
+NODE_CLASS_MAPPINGS = {
+    "JMCAI_ModelScope_TextToImage": ModelScopeTextToImage,
+    "JMCAI_ModelScope_Chat": ModelScopeChat,
+}
+
+NODE_DISPLAY_NAME_MAPPINGS = {
+    "JMCAI_ModelScope_TextToImage": "JMCAI❤ 魔搭 文生图",
+    "JMCAI_ModelScope_Chat": "JMCAI❤ 魔搭 多模态 LLM",
+}
