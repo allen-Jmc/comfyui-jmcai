@@ -5,6 +5,17 @@ from PIL import Image, ImageOps
 
 import folder_paths
 
+IMAGE_EXTENSIONS = {
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".webp",
+    ".bmp",
+    ".gif",
+    ".tif",
+    ".tiff",
+}
+
 
 class JMCSafeLoadImage:
     """
@@ -16,7 +27,11 @@ class JMCSafeLoadImage:
     @classmethod
     def INPUT_TYPES(s):
         input_dir = folder_paths.get_input_directory()
-        files = [f for f in os.listdir(input_dir) if os.path.isfile(os.path.join(input_dir, f))]
+        files = [
+            f for f in os.listdir(input_dir)
+            if os.path.isfile(os.path.join(input_dir, f))
+            and os.path.splitext(f)[1].lower() in IMAGE_EXTENSIONS
+        ]
         # 将我们和前端约定的暗号显式加入白名单中，防止 ComfyUI 内部执行强制校验 (validation) 导致报错
         if "EMPTY_REJECT_IN_UI.png" not in files:
             files.append("EMPTY_REJECT_IN_UI.png")

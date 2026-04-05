@@ -5,6 +5,7 @@ ComfyUI-JmcAI - 多平台 API 插件
 
 
 from .nodes import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
+from . import server_routes as _server_routes
 
 # --------------------------------------------------------------------------------
 # Terminal Startup Info
@@ -22,7 +23,7 @@ class TerminalColors:
     UNDERLINE = '\033[4m'
 
 def print_startup_info():
-    version = "1.1.0"
+    version = _server_routes.PLUGIN_VERSION
     
     # Banner
     print(f"{TerminalColors.HEADER}================================================================{TerminalColors.ENDC}")
