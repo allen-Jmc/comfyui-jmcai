@@ -3,8 +3,12 @@ import numpy as np
 import folder_paths
 import random
 import os
-from ..utils.image_utils import tensor_to_pil, pil_to_tensor, unify_image_sizes
-from ..core.logger import jm_log
+try:
+    from ..utils.image_utils import tensor_to_pil, pil_to_tensor, unify_image_sizes
+    from ..core.logger import jm_log
+except Exception:
+    from utils.image_utils import tensor_to_pil, pil_to_tensor, unify_image_sizes
+    from core.logger import jm_log
 
 class JmcAI_ImageBatch_Multi:
     """

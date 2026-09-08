@@ -1,3 +1,11 @@
-requests>=2.25.0
+# 基础运行核心依赖（必须）
+requests>=2.28.0
 Pillow>=9.0.0
 numpy>=1.20.0
+
+# 平台原生扩展 SDK（按需选用）：
+# 如果使用第三方 OpenAI 兼容格式或中转站（如中转 GPT-Image-2、Nano Banana、Seedream 5.0），无需安装下方 SDK。
+# 仅当使用对应厂商原生 SDK 直连时按需安装：
+# google-genai>=1.0.0      # Gemini / Nano Banana 原生 SDK 模式
+# xai_sdk>=1.5.0           # Grok 原生 gRPC Protobuf 模式
+# dashscope>=1.17.0        # 阿里通义万相原生 SDK 模式

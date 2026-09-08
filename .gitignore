@@ -22,3 +22,6 @@ venv/
 dist/
 build/
 *.egg-info/
+
+# Local API configuration & credentials
+api_config.json

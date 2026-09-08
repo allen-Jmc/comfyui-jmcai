@@ -54,7 +54,6 @@ def _save_input_file(media_kind: str, original_name: str, content: bytes) -> str
     return target_name
 
 
-@PromptServer.instance.routes.get("/jmcai/capabilities")
 async def get_jmcai_capabilities(_request: web.Request) -> web.Response:
     return web.json_response(
         {
@@ -68,7 +67,6 @@ async def get_jmcai_capabilities(_request: web.Request) -> web.Response:
     )
 
 
-@PromptServer.instance.routes.post("/jmcai/upload/{media_kind}")
 async def upload_jmcai_asset(request: web.Request) -> web.Response:
     media_kind = str(request.match_info.get("media_kind", "")).strip().lower()
     if media_kind not in UPLOADABLE_MEDIA_KINDS:
@@ -86,3 +84,9 @@ async def upload_jmcai_asset(request: web.Request) -> web.Response:
             },
         }
     )
+
+
+# Safely register routes if PromptServer.instance is available
+if hasattr(PromptServer, "instance") and getattr(PromptServer, "instance", None) is not None:
+    PromptServer.instance.routes.get("/jmcai/capabilities")(get_jmcai_capabilities)
+    PromptServer.instance.routes.post("/jmcai/upload/{media_kind}")(upload_jmcai_asset)

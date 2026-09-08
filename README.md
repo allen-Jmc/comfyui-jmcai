@@ -2,7 +2,7 @@
 
 <div align="center">
 
-**❤ 多平台 AI 节点集合 for ComfyUI**
+**❤ 多平台全能云端 API 生图与工作流增强套件 for ComfyUI**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
@@ -13,162 +13,123 @@
 
 ## 📖 简介
 
-ComfyUI-JMCAI 是一个为 ComfyUI 设计的多平台 AI 节点插件，主打**高性能、低侵入、自动化**。当前提供 **22 个节点**，覆盖 **火山引擎 (Volcengine) Doubao/Seedream**、**魔搭社区 (ModelScope)**、**图像处理工具**、**尺寸助手**，并补充了面向 JMCAI 桌面端 external target 的远程资产上传能力。
+**ComfyUI-JMCAI** 是专为 ComfyUI 设计的高性能、现代化多平台 AI 生图与工作流增强套件。
+
+全面支持通过**自定义 API 渠道（官方接口或中转站）**接入全球顶尖生图模型，包括 **GPT-Image-2**、**Nano Banana (Gemini 3 Pro / 2.5 Flash Image)**、**xAI Grok**、**火山引擎 / BytePlus Seedream 5.0 Pro**、**阿里通义万相** 以及 **智谱 GLM-Image**。
+
+插件同时内置了完善的 API 密钥持久化管理、URL 容错脱水、多图参考融合、高精度局部裁切重绘、全主流基模尺寸助手，以及与 JMCAI 桌面端无缝协同的远程媒体资产上传服务。
 
 ---
 
-## ✨ 功能特性
+## ✨ 核心能力与节点矩阵
 
-### 🔥 火山引擎节点 (`JMCAI❤/火山引擎`)
+### 🎨 1. 多平台 API 生图节点 (`JMCAI❤/API生图`)
 
-| 节点名称 | 功能描述 | 特性 |
+| 节点名称 | 目标模型 / 系列 | 支持能力与协议特点 |
 |:---|:---|:---|
-| **火山引擎 对话** | 多模态对话 | 支持最多 3 张图片输入，支持文字/图像混合理解 |
-| **火山引擎 文生图 (单/组)** | 文本生成图片 | 支持 **Seedream 4.0/4.5**，可生成单张或连贯的一组图像 |
-| **火山引擎 图生图 (单/组)** | 图片参考生成 | 基于单张参考图，生成单张或连贯的一组相关图像 |
-| **火山引擎 多图融合 (单/组)** | 多图特征融合 | 融合多张图片特征，生成单张或一组新的创意图像 |
-
-> [!TIP]
-> 批量 (Batch) 节点均支持 **流式输出 (Stream)**，可在生成过程中实时反馈进度。
-
-### 🤖 魔搭社区节点 (`JMCAI❤/魔搭社区`)
-
-| 节点名称 | 功能描述 | 特性 |
-|:---|:---|:---|
-| **魔搭 文生图** | 高速文本生图 | 支持 **Z-Image-Turbo** 等模型，主打超快推理速度 |
-| **魔搭 多模态 LLM** | 视觉语言模型 | 支持 **Qwen-VL** 系列，支持最多 3 张图像的多轮理解 |
-
-### 🛠 图像工具 (`JMCAI❤/图像工具`)
-
-| 节点名称 | 功能描述 | 特性 |
-|:---|:---|:---|
-| **局部裁切预处理** | 自动提取遮罩区域 | 支持 **部分运行 (Partial Run)** 预览，秒级反馈裁切效果 |
-| **局部裁切贴回** | 精确还原图像 | 处理生成后的差异，并将其完美贴合回原图位置 |
-| **图像组合批次 (多重)** | 动态多图合并 | 自由调整输入端口数量，自动完成图像规格化与对齐 |
-| **安全图片加载 (Safe Load Image)** | 安全加载防崩溃 | 优雅接管工作流中缺失图片的情况，输出占位图及布尔信号避免中断 |
-
-### 📐 尺寸工具 (`JMCAI❤/尺寸工具`)
-
-| 节点名称 | 功能描述 | 特性 |
-|:---|:---|:---|
-| **SD 1.5 尺寸助手** | 输出 SD 1.5 常用尺寸 | 快速给出宽、高、宽高比 |
-| **SDXL 尺寸助手** | 输出 SDXL 推荐尺寸 | 额外返回总像素，方便控算力 |
-| **Flux.1 尺寸助手** | 输出 Flux 常用尺寸 | 覆盖方图、宽屏、长屏等高频比例 |
-| **Qwen-Image 尺寸助手** | 输出 Qwen-Image 推荐尺寸 | 贴合训练分布，减少反复试尺寸 |
-| **Qwen-Image-Edit 尺寸助手** | 输出 Qwen-Image-Edit 推荐尺寸 | 适合图像编辑场景 |
-| **Z-Image 尺寸助手** | 输出 Z-Image 常用尺寸 | 面向写实高分辨率比例 |
-| **WAN2.1 尺寸助手** | 输出 WAN2.1 基础尺寸 | 支持一键返回半尺寸 |
-| **WAN2.1 尺寸助手 (进阶版)** | 输出 WAN2.1 扩展尺寸 | 补充 4:3、1:1 等更多比例 |
-| **图像尺寸探测** | 读取输入图像尺寸 | 直接输出当前图像宽高 |
-
-### 🌐 工作流桥接能力
-
-| 能力 | 功能描述 | 特性 |
-|:---|:---|:---|
-| **JMCAI Companion Upload** | external target 远程资产上传 | 自动探测桌面端 companion 能力，补齐 `audio/video/file` 上传 |
-| **ComfyUI 原生图片上传兼容** | 保持图片链路不变 | `image/mask` 仍走原生 `/upload/image`，不接管现有图片上传 |
+| **JMCAI❤ OpenAI/GPT-Image-2 生图** | `gpt-image-2`, `gpt-image-1`, `dall-e-3`, 中转站 `gemini-3-pro-image-preview` / `nano-banana` 等 | 支持官方或任意第三方中转站 OpenAI 格式接口；文生图 (`/v1/images/generations`) 与最多 16 张参考图编辑重绘 (`/v1/images/edits`)；内置 URL 自动脱水容错（自动裁切多余 `/v1` 避免 404）。 |
+| **JMCAI❤ Gemini/Nano Banana 原生生图** | `gemini-3-pro-image-preview` (Nano Banana Pro), `gemini-2.5-flash-image` (Nano Banana 2) | 基于官方 Google GenAI SDK；支持原生文生图、最高 14 张参考图多图融合理解、遮罩编辑以及多轮对话图像生成。 |
+| **JMCAI❤ 火山/Seedream 5.0 生图** | `dola-seedream-5-0-pro-260628`, `seedream-5-0-260128`, `seedream-4-5`, `seedream-4-0` | 直连 BytePlus / 火山方舟 ModelArk 最新 API；支持文生图、单/多参考图生图、超高分辨率与灵活长宽比控制。 |
+| **JMCAI❤ xAI Grok 生图** | `grok-imagine-image-quality`, `grok-imagine-image`, `grok-imagine-image-pro` | 直连 xAI 原生 Protobuf gRPC 接口；支持最高 3 张高质量参考图融合与遮罩编辑。 |
+| **JMCAI❤ 阿里/通义万相生图** | `qwen-image-plus`, `qwen-image-edit` | 支持阿里 DashScope 通义万相文生图与最高 3 图编辑重绘。 |
+| **JMCAI❤ 智谱/GLM-Image 生图** | `glm-image`, `cogview-4-250304` | 智谱 AI CogView / GLM-Image 快速文本生成高质量中文构图。 |
 
 ---
 
-## 🚀 安装
+### ⚙️ 2. API 配置与持久化管理 (`JMCAI❤/API配置`)
 
-### 方法 1: 通过 ComfyUI-Manager (推荐)
+| 节点名称 | 功能说明 | 特性 |
+|:---|:---|:---|
+| **JMCAI❤ API配置加载器** (`JMCAI_APIImageConfigLoader`) | 一键读取保存的各平台 API 配置 | 输出 `api_key`、`base_url`、`model_name`，直连下游生图节点；支持节点内局部覆盖 (Override)。 |
+| **JMCAI❤ API配置保存器** (`JMCAI_APIImageConfigSaver`) | 持久化保存 API Key 与中转站配置 | 配置写入插件根目录 `api_config.json`，跨 ComfyUI 重启生效；支持动态增加或删除自定义模型名称。 |
 
-1. 打开 ComfyUI-Manager → `Install custom nodes`
-2. 搜索 `JMCAI` 或直接粘贴仓库地址：
-   ```
-   https://github.com/allen-Jmc/comfyui-jmcai
-   ```
-3. 安装完成后重启 ComfyUI
+---
 
-### 方法 2: 手动安装
+### 🛠 3. 图像与工作流增强工具 (`JMCAI❤/图像工具`)
+
+| 节点名称 | 功能说明 | 特性 |
+|:---|:---|:---|
+| **JMCAI❤ API图像保存与预览** (`JMCAI_APIImageSave`) | 保存 API 生成图片并生成预览 | 自动附加生成 Prompt 与元数据，兼容 ComfyUI 画布实时预览。 |
+| **JmcAI Safe Load Image** (`JMCSafeLoadImage`) | 客户端资产安全加载节点 | 防御前端 `EMPTY_REJECT_IN_UI.png` 占位符引发的崩溃，安全回退。 |
+| **JMCAI❤ 局部裁切预处理** (`JMCAI_LocalCropPreprocess`) | 自动提取遮罩区域并缩放对齐 | 支持 **部分运行 (Partial Run)** 实时预览构图，秒级微调无缝贴合。 |
+| **JMCAI❤ 局部裁切贴回** (`JMCAI_LocalCropPaste`) | 局部重绘精准还原回原图 | 支持平滑羽化边缘，确保重绘区域与原始图像过渡自然。 |
+| **JMCAI❤ 图像组合批次 (多重)** (`JMCAI_ImageBatch_Multi`) | 动态多图合并为批次张量 | 自由调整输入端口数量，自动完成图像规格化与比例对齐。 |
+
+---
+
+### 📐 4. 尺寸助手系列 (`JMCAI❤/尺寸工具`)
+
+内置全主流文生图基模推荐分辨率，一键输出符合模型训练分布的最佳宽高：
+- **SD 1.5 尺寸助手** (`JmcAI_SD15ResolutionNode`)
+- **SDXL 尺寸助手** (`JmcAI_SDXLResolutionNode`)
+- **Flux.1 尺寸助手** (`JmcAI_FluxResolutionNode`)
+- **Qwen-Image 尺寸助手** (`JmcAI_QwenImageResolutionNode`)
+- **Qwen-Image-Edit 尺寸助手** (`JmcAI_QwenImageEditResolutionNode`)
+- **Z-Image 尺寸助手** (`JmcAI_ZImageResolutionNode`)
+- **WAN2.1 尺寸助手** (`JmcAI_WAN21ResolutionNode`)
+- **WAN2.1 尺寸助手 (进阶版)** (`JmcAI_WAN21AdvancedResolutionNode`)
+- **图像尺寸探测** (`JmcAI_ImageSizeDetectorNode`)
+
+---
+
+### 🌐 5. JMCAI 桌面端伴侣能力 (Companion Routes)
+
+插件内置了 JMCAI 桌面端通信路由，支持远程 ComfyUI 运行环境自动探测与媒体资产直传：
+- `GET /jmcai/capabilities`：能力握手检测
+- `POST /jmcai/upload/audio`：音频素材上传
+- `POST /jmcai/upload/video`：视频素材上传
+- `POST /jmcai/upload/file`：工作流参考文件上传
+
+---
+
+## 🚀 安装与环境准备
+
+### 方法 1: 放入 custom_nodes 目录
 
 ```bash
-# 克隆到 custom_nodes 目录
 cd <ComfyUI路径>/custom_nodes
-git clone https://github.com/allen-Jmc/comfyui-jmcai
+git clone https://github.com/allen-Jmc/comfyui-jmcai.git
+```
 
-# 安装依赖
+### 方法 2: 安装依赖
+
+基础生图仅需 Python 标准三方库：
+```bash
 pip install -r comfyui-jmcai/requirements.txt
 ```
 
----
-
-## 📝 使用说明
-
-### 1. 配置 API 密钥
-
-- **火山引擎**: 访问 [Ark 控制台](https://console.volcengine.com/ark) 获取 API Key 和推理接入点 ID。
-- **魔搭社区**: 访问 [ModelScope 控制台](https://modelscope.cn/my/personal/index) 获取 SDK 令牌。
-
-### 2. 在 ComfyUI 中使用
-
-1. 在节点库搜索 `JMCAI` 即可看到所有相关分类。
-2. 将节点拖入画布，填入您的 API Key 并根据提示配置参数。
-3. **重要**：对于火山引擎节点，`model` 参数应填写控制台提供的 **推理接入点 ID**。
-
-### 3. JMCAI 远程资产上传
-
-插件现已内置 JMCAI 桌面端配套上传接口，适合远程外部 ComfyUI 场景。安装插件后，桌面端在保存 external target 时会自动探测：
-
-- `GET /jmcai/capabilities`
-- `POST /jmcai/upload/audio`
-- `POST /jmcai/upload/video`
-- `POST /jmcai/upload/file`
-
-接口统一使用 `multipart/form-data`，文件字段名固定为 `file`，返回格式为：
-
-```json
-{
-  "ok": true,
-  "data": {
-    "filename": "jmcai_audio_xxx.wav",
-    "mediaKind": "audio"
-  }
-}
-```
-
-上传后的文件会写入远程 ComfyUI 的 `input` 目录，适合 `LoadAudio`、视频加载节点和其他从 `input` 目录读取文件名的工作流。
-
-> [!NOTE]
-> 这组接口只负责远程 `audio` / `video` / `file` 上传，不接管 `image` / `mask`。图片和遮罩仍沿用 ComfyUI 默认的 `/upload/image` 机制。
-
-### 4. 特色：局部裁切 (Partial Run)
-
-在 `局部裁切预处理` 节点中，开启 **“仅预览”** 选项后：
-- **实时预览**：点击运行即仅执行上游必要节点，跳过漫长的 KSampler 或云端生成。
-- **参数微调**：可以在节点 UI 中直接看到裁切后的构图和遮罩效果，确认无误后再关闭“仅预览”正式运行。
-
-### 5. 升级影响范围
-
-- **不会影响现有节点执行链路**：火山引擎、魔搭社区、图像工具、尺寸工具的节点注册与运行逻辑保持不变。
-- **不会替换原生图片上传**：`image` / `mask` 继续沿用 ComfyUI 默认 `/upload/image`，已有工作流无需改造。
-- **只新增 companion 路由**：`audio` / `video` / `file` 上传仅在 JMCAI 桌面端 external target 探测到能力后才会启用。
-- **已规避下拉框污染**：远程上传写入 `input` 目录后，`Safe Load Image` 现在只枚举常见图片扩展名，不会把音频、视频、普通文件混进图片选择列表。
+> **可选原生 SDK 说明：**
+> - 如果通过第三方中转站（OpenAI 兼容格式）调用 **GPT-Image-2**、**Nano Banana**、**Seedream**，**无需安装任何重型外部 SDK**，开箱即用！
+> - 若需要直连官方原生 SDK 模式，可按需安装：
+>   - Gemini 原生直连：`pip install google-genai`
+>   - xAI Grok 原生直连：`pip install xai_sdk`
+>   - 阿里通义万相原生直连：`pip install dashscope`
 
 ---
 
-## 📦 依赖项
+## 💡 使用中转站 / 自定义 API 调用指南
 
-```text
-requests>=2.25.0
-Pillow>=9.0.0
-numpy>=1.20.0
-torch>=2.0.0
-```
+### 场景 A：使用中转站调用 GPT-Image-2
+1. 在画布中添加 **`JMCAI❤ OpenAI/GPT-Image-2 生图`** 节点。
+2. `api_key`：填写您从中转站获取的密钥（如 `sk-xxxx`）。
+3. `base_url`：填写中转站地址（例如 `https://api.your-relay.com`，即使填入带有 `/v1` 的路径，节点内置的清洗器也会自动智能处理）。
+4. `model_name`：选择或手动输入 `gpt-image-2`。
+5. 连接 `prompt` 即可直接生成；若需要多图参考或垫图，连接至 `ref_images` 端口。
+
+### 场景 B：使用中转站以 OpenAI 兼容格式调用 Nano Banana
+许多 API 中转站将 Google 的 Nano Banana 系列（`gemini-3-pro-image-preview` / `gemini-2.5-flash-image`）封装为标准 OpenAI 图像协议。
+1. 直接使用 **`JMCAI❤ OpenAI/GPT-Image-2 生图`** 节点。
+2. 填写中转站的 `api_key` 与 `base_url`。
+3. `model_name` 下拉选择 `gemini-3-pro-image-preview`（或输入中转站指定的模型别名）。
+4. 节点已对非 OpenAI 专有参数进行了自动兼容适配，中转站可无缝出图。
+
+### 场景 C：持久化保存 API 配置
+1. 在画布中放置 **`JMCAI❤ API配置保存器`** 节点。
+2. 选择平台类型（如 `OpenAI Compatible`），填入您的 `api_key`、`base_url`，点击运行一次即可写入 `api_config.json`。
+3. 之后在任何工作流中，直接使用 **`JMCAI❤ API配置加载器`** 即可将配置注入生图节点，无需每次重复输入密钥。
 
 ---
 
 ## 📄 许可证
 
-本项目采用 [MIT License](LICENSE)。
-
----
-
-<div align="center">
-
-**如果觉得有用，请给个 ⭐ Star！**
-
-Made with ❤ by JMCAI
-
-</div>
+本项目基于 [MIT License](LICENSE) 开源。

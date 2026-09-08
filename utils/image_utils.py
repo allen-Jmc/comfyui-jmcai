@@ -3,7 +3,14 @@ import base64
 import numpy as np
 import torch
 from PIL import Image
-from ..core.logger import jm_log
+try:
+    from ..core.logger import jm_log
+except Exception:
+    try:
+        from core.logger import jm_log
+    except Exception:
+        import logging
+        jm_log = logging.getLogger("JMCAI")
 
 def tensor_to_pil(image):
     """将ComfyUI张量转换为PIL图像"""
