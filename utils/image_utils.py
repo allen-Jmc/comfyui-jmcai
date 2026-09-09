@@ -13,19 +13,41 @@ except Exception:
         jm_log = logging.getLogger("JMCAI")
 
 def tensor_to_pil(image):
-    """将ComfyUI张量转换为PIL图像"""
+    """将ComfyUI张量转换为PIL图像，支持非标维度自动降维容错"""
     if image is None:
         return None
     
-    # ComfyUI张量是 [B, H, W, C] 或 [H, W, C]，范围 [0, 1]
-    if len(image.shape) == 4:  # 批量图像 [B, H, W, C]
-        img_np = (image[0] * 255).cpu().numpy().astype(np.uint8)
-        pil_image = Image.fromarray(img_np)
-    else: # [H, W, C]
-        img_np = (image * 255).cpu().numpy().astype(np.uint8)
-        pil_image = Image.fromarray(img_np)
-    
-    return pil_image
+    if hasattr(image, 'cpu'):
+        image = image.cpu().detach()
+
+    # 循环消除多余的前导单一维度 (如 [1, 1, H, W, C])
+    while image.dim() > 4 and image.shape[0] == 1:
+        image = image.squeeze(0)
+
+    # 提取单张图像张量
+    if image.dim() >= 4:
+        sub = image[0]
+    else:
+        sub = image
+
+    while sub.dim() > 3 and sub.shape[0] == 1:
+        sub = sub.squeeze(0)
+    if sub.dim() == 2:
+        sub = sub.unsqueeze(-1)
+
+    img_np = (sub * 255).numpy().astype(np.uint8)
+    channels = img_np.shape[-1] if img_np.ndim == 3 else 1
+    if channels == 1:
+        img_np_2d = np.squeeze(img_np)
+        if img_np_2d.ndim == 1:
+            img_np_2d = np.expand_dims(img_np_2d, axis=0)
+        return Image.fromarray(img_np_2d, mode="L").convert("RGB")
+    elif channels == 3:
+        return Image.fromarray(img_np, mode="RGB")
+    elif channels == 4:
+        return Image.fromarray(img_np, mode="RGBA").convert("RGB")
+    else:
+        return Image.fromarray(img_np[..., :3], mode="RGB")
 
 def pil_to_tensor(pil_image):
     """将PIL图像转换为ComfyUI张量 [1, H, W, 3]"""

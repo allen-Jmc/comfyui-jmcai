@@ -32,23 +32,55 @@ def tensor_to_pil(tensor):
     """
     Convert ComfyUI IMAGE tensor [B,H,W,C] to list of PIL Images.
     ComfyUI IMAGE format: torch.Tensor, shape [B, H, W, C], dtype float32, range [0, 1].
+    Supports robust fallback for single-channel, 2D, 3D, and irregular tensor shapes.
     """
     if tensor is None:
         return []
     if Image is None:
         raise ImportError("Pillow is required: pip install Pillow")
 
-    images = []
     if hasattr(tensor, 'cpu'):
         tensor = tensor.cpu().detach()
 
-    if tensor.dim() == 3:
-        tensor = tensor.unsqueeze(0)
+    # 1. 如果是 2 维 [H, W]，扩展为 [1, H, W, 1]
+    if tensor.dim() == 2:
+        tensor = tensor.unsqueeze(0).unsqueeze(-1)
+    # 2. 如果是 3 维 [H, W, C] 或 [B, H, W]
+    elif tensor.dim() == 3:
+        if tensor.shape[-1] in (1, 3, 4):
+            tensor = tensor.unsqueeze(0)  # [1, H, W, C]
+        else:
+            tensor = tensor.unsqueeze(-1)  # [B, H, W] -> [B, H, W, 1]
 
+    # 3. 循环消除多余的前导单一维度 (如 [1, 1, H, W, C])
+    while tensor.dim() > 4 and tensor.shape[0] == 1:
+        tensor = tensor.squeeze(0)
+
+    images = []
     for i in range(tensor.shape[0]):
-        img_np = tensor[i].numpy()
+        sub_t = tensor[i]
+        # 保证单图张量降为 3 维 [H, W, C]
+        while sub_t.dim() > 3 and sub_t.shape[0] == 1:
+            sub_t = sub_t.squeeze(0)
+        if sub_t.dim() == 2:
+            sub_t = sub_t.unsqueeze(-1)
+
+        img_np = sub_t.numpy()
         img_np = np.clip(img_np * 255.0, 0, 255).astype(np.uint8)
-        img = Image.fromarray(img_np, mode="RGB")
+
+        # 检查通道数自适应转换
+        channels = img_np.shape[-1] if img_np.ndim == 3 else 1
+        if channels == 1:
+            img_np_2d = np.squeeze(img_np)
+            if img_np_2d.ndim == 1:
+                img_np_2d = np.expand_dims(img_np_2d, axis=0)
+            img = Image.fromarray(img_np_2d, mode="L").convert("RGB")
+        elif channels == 3:
+            img = Image.fromarray(img_np, mode="RGB")
+        elif channels == 4:
+            img = Image.fromarray(img_np, mode="RGBA").convert("RGB")
+        else:
+            img = Image.fromarray(img_np[..., :3], mode="RGB")
         images.append(img)
 
     return images
@@ -94,6 +126,7 @@ def mask_to_pil(mask_tensor):
     """
     Convert ComfyUI MASK tensor to PIL Image (grayscale).
     ComfyUI MASK format: torch.Tensor, shape [H, W] or [B, H, W].
+    Robustly handles 4D tensors like [B, 1, H, W], [B, H, W, 1], [1, 1, 2048, 1], etc.
     """
     if mask_tensor is None:
         return None
@@ -103,10 +136,24 @@ def mask_to_pil(mask_tensor):
     if hasattr(mask_tensor, 'cpu'):
         mask_tensor = mask_tensor.cpu().detach()
 
+    # 1. 循环消除前导单一维度 (如 [1, 1, H, W] -> [H, W])
+    while mask_tensor.dim() > 2 and mask_tensor.shape[0] == 1:
+        mask_tensor = mask_tensor.squeeze(0)
+
+    # 2. 消除末尾单一通道维度 (如 [H, W, 1] -> [H, W])
+    while mask_tensor.dim() > 2 and mask_tensor.shape[-1] == 1:
+        mask_tensor = mask_tensor.squeeze(-1)
+
+    # 3. 若仍为 3 维 [B, H, W]，取第一张
     if mask_tensor.dim() == 3:
         mask_tensor = mask_tensor[0]
 
     mask_np = mask_tensor.numpy()
+    if mask_np.ndim > 2:
+        mask_np = np.squeeze(mask_np)
+    if mask_np.ndim == 1:
+        mask_np = np.expand_dims(mask_np, axis=0)
+
     mask_np = np.clip(mask_np * 255.0, 0, 255).astype(np.uint8)
     return Image.fromarray(mask_np, mode="L")
 
