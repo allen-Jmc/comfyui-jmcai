@@ -68,7 +68,7 @@ class JMCAI_GLMImageGenerate:
     FUNCTION = "generate"
     OUTPUT_NODE = True
     RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("images",)
+    RETURN_NAMES = ("图像",)
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -82,22 +82,22 @@ class JMCAI_GLMImageGenerate:
 
         return {
             "required": {
-                "prompt": ("STRING", {
+                "提示词": ("STRING", {
                     "multiline": True,
                     "default": "",
-                    "placeholder": "Enter your image generation prompt here..."
+                    "placeholder": "请输入图片生成提示词（Prompt）..."
                 }),
-                "api_key": ("STRING", {
+                "API密钥": ("STRING", {
                     "default": saved_key,
-                    "placeholder": "API Key (ZhipuAI)"
+                    "placeholder": "填写智谱 API Key"
                 }),
-                "model_name": (models, {
+                "模型名称": (models, {
                     "default": models[0] if models else "glm-image"
                 }),
-                "quality": (["hd", "standard"], {
+                "画质质量": (["hd", "standard"], {
                     "default": "hd"
                 }),
-                "size": ([
+                "图像尺寸": ([
                     "1280x1280 (1:1 · 正方默认)",
                     "1568x1056 (3:2 · 横屏摄影)",
                     "1056x1568 (2:3 · 竖屏人像)",
@@ -113,28 +113,28 @@ class JMCAI_GLMImageGenerate:
                 }),
             },
             "optional": {
-                "num_images": ("INT", {
+                "生成张数": ("INT", {
                     "default": 1,
                     "min": 1,
                     "max": 4,
                 }),
-                "custom_size": ("STRING", {
+                "自定义尺寸": ("STRING", {
                     "default": "",
                     "placeholder": "自定义宽x高（需为32倍数，如 1280x1280）"
                 }),
-                "base_url": ("STRING", {
+                "接口地址": ("STRING", {
                     "default": saved_url,
                     "placeholder": "https://open.bigmodel.cn/api"
                 }),
-                "ref_images": ("IMAGE",),
-                "image1": ("IMAGE",),
-                "image2": ("IMAGE",),
-                "image3": ("IMAGE",),
-                "custom_model": ("STRING", {
+                "多参考图批次": ("IMAGE",),
+                "参考图1": ("IMAGE",),
+                "参考图2": ("IMAGE",),
+                "参考图3": ("IMAGE",),
+                "自定义模型": ("STRING", {
                     "default": "",
-                    "placeholder": "Leave empty to use dropdown"
+                    "placeholder": "留空默认使用下拉框，输入则优先指定模型名称"
                 }),
-                "seed": ("INT", {
+                "随机种子": ("INT", {
                     "default": 0,
                     "min": 0,
                     "max": 0x7FFFFFFF,
@@ -146,10 +146,39 @@ class JMCAI_GLMImageGenerate:
     def IS_CHANGED(cls, **kwargs):
         return float("NaN")
 
-    def generate(self, prompt, api_key, model_name, quality, size, num_images=1,
-                 custom_size="", base_url="", ref_images=None,
-                 image1=None, image2=None, image3=None,
-                 custom_model="", seed=0):
+    def generate(
+        self,
+        提示词=None,
+        API密钥=None,
+        模型名称=None,
+        画质质量="hd",
+        图像尺寸=None,
+        生成张数=1,
+        自定义尺寸="",
+        接口地址="",
+        多参考图批次=None,
+        参考图1=None,
+        参考图2=None,
+        参考图3=None,
+        自定义模型="",
+        随机种子=0,
+        **kwargs,
+    ):
+        prompt = kwargs.get("prompt", 提示词)
+        api_key = kwargs.get("api_key", API密钥)
+        model_name = kwargs.get("model_name", 模型名称)
+        quality = kwargs.get("quality", 画质质量)
+        size = kwargs.get("size", 图像尺寸)
+        num_images = kwargs.get("num_images", 生成张数)
+        custom_size = kwargs.get("custom_size", 自定义尺寸)
+        base_url = kwargs.get("base_url", 接口地址)
+        ref_images = kwargs.get("ref_images", 多参考图批次)
+        image1 = kwargs.get("image1", 参考图1)
+        image2 = kwargs.get("image2", 参考图2)
+        image3 = kwargs.get("image3", 参考图3)
+        custom_model = kwargs.get("custom_model", 自定义模型)
+        seed = kwargs.get("seed", 随机种子)
+
         if not prompt or not prompt.strip():
             raise ValueError("[JMCAI GLM] Prompt is empty.")
         if not api_key or not api_key.strip():

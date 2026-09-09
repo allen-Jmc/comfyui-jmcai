@@ -24,10 +24,7 @@ except ImportError:
 
 class JMCAI_APIImageSave:
     """
-    Save API-generated images to ComfyUI output directory.
-
-    Saves images with timestamps and optional prefix.
-    Compatible with ComfyUI's image preview system.
+    保存 API 生成的图像到 ComfyUI 输出目录，并在画布节点中实时显示预览。
     """
 
     CATEGORY = "JMCAI❤/图像工具"
@@ -39,16 +36,16 @@ class JMCAI_APIImageSave:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "images": ("IMAGE",),
-                "filename_prefix": ("STRING", {
+                "图像": ("IMAGE",),
+                "文件名保存前缀": ("STRING", {
                     "default": "JMCAI_API",
-                    "placeholder": "Filename prefix"
+                    "placeholder": "保存文件名前缀"
                 }),
             },
             "optional": {
-                "output_dir": ("STRING", {
+                "自定义输出目录": ("STRING", {
                     "default": "",
-                    "placeholder": "Custom output directory (leave empty for default)"
+                    "placeholder": "留空默认保存至 ComfyUI output 目录"
                 }),
             },
             "hidden": {
@@ -57,18 +54,19 @@ class JMCAI_APIImageSave:
             },
         }
 
-    def save_images(self, images, filename_prefix="JMCAI_API",
-                    output_dir="", prompt=None, extra_pnginfo=None):
+    def save_images(self, 图像=None, 文件名保存前缀="JMCAI_API",
+                    自定义输出目录="", prompt=None, extra_pnginfo=None, **kwargs):
         """
-        Save images to output directory with metadata.
+        保存图像至输出目录，同时嵌入 Prompt 与 PNG 元数据信息。
+        支持中英文参数无缝兼容。
+        """
+        images = kwargs.get("images", 图像)
+        filename_prefix = kwargs.get("filename_prefix", 文件名保存前缀)
+        output_dir = kwargs.get("output_dir", 自定义输出目录)
 
-        Args:
-            images: ComfyUI IMAGE tensor [B, H, W, C]
-            filename_prefix: prefix for saved filenames
-            output_dir: custom output directory (uses ComfyUI default if empty)
-            prompt: ComfyUI hidden prompt data
-            extra_pnginfo: ComfyUI hidden PNG metadata
-        """
+        if images is None:
+            raise ValueError("[JMCAI Save] 没有传入有效图像数据。")
+
         # Determine output directory
         if output_dir and output_dir.strip():
             out_dir = output_dir.strip()
@@ -100,7 +98,7 @@ class JMCAI_APIImageSave:
 
             # Save image
             img.save(filepath, pnginfo=metadata)
-            logger.info(f"[JMCAI Save] Image saved: {filepath}")
+            logger.info(f"[JMCAI Save] 图像已成功保存至: {filepath}")
 
             results.append({
                 "filename": filename,

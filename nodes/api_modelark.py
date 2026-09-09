@@ -157,7 +157,7 @@ class JMCAI_ModelArkImageGenerate:
     FUNCTION = "generate"
     OUTPUT_NODE = True
     RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("images",)
+    RETURN_NAMES = ("图像",)
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -176,23 +176,23 @@ class JMCAI_ModelArkImageGenerate:
 
         return {
             "required": {
-                "prompt": ("STRING", {
+                "提示词": ("STRING", {
                     "multiline": True,
                     "default": "",
-                    "placeholder": "Enter a Seedream image prompt...",
+                    "placeholder": "请输入 Seedream 生图提示词（Prompt）...",
                 }),
-                "api_key": ("STRING", {
+                "API密钥": ("STRING", {
                     "default": saved_key,
-                    "placeholder": "ModelArk API Key",
+                    "placeholder": "填写火山方舟 ModelArk API Key",
                 }),
-                "base_url": ("STRING", {
+                "接口地址": ("STRING", {
                     "default": saved_url,
                     "placeholder": DEFAULT_BASE_URL,
                 }),
-                "model_name": (models, {
+                "模型名称": (models, {
                     "default": default_model,
                 }),
-                "size": ([
+                "图像尺寸": ([
                     "2K (推荐默认 · 自动最佳超清)",
                     "1K (标准清晰度)",
                     "2048x2048 (2K · 1:1 方图)",
@@ -216,47 +216,47 @@ class JMCAI_ModelArkImageGenerate:
                 }),
             },
             "optional": {
-                "ref_images": ("IMAGE",),
-                "image1": ("IMAGE",),
-                "image2": ("IMAGE",),
-                "image3": ("IMAGE",),
-                "custom_model": ("STRING", {
+                "多参考图批次": ("IMAGE",),
+                "参考图1": ("IMAGE",),
+                "参考图2": ("IMAGE",),
+                "参考图3": ("IMAGE",),
+                "自定义模型": ("STRING", {
                     "default": "",
-                    "placeholder": "Leave empty to use dropdown",
+                    "placeholder": "留空默认使用下拉框，输入则优先指定模型名称",
                 }),
-                "model_family": (list(MODEL_FAMILY_HINTS), {
+                "模型架构系列": (list(MODEL_FAMILY_HINTS), {
                     "default": "auto",
                 }),
-                "custom_size": ("STRING", {
+                "自定义尺寸": ("STRING", {
                     "default": "",
-                    "placeholder": "Optional WIDTHxHEIGHT override",
+                    "placeholder": "可选宽x高尺寸覆盖，如 2048x1152",
                 }),
-                "sequential_image_generation": (["disabled", "auto"], {
+                "多图连续生成": (["disabled", "auto"], {
                     "default": "disabled",
                 }),
-                "max_images": ("INT", {
+                "最大生成张数": ("INT", {
                     "default": 15,
                     "min": 1,
                     "max": 15,
                 }),
-                "output_format": (["png", "jpeg"], {
+                "输出格式": (["png", "jpeg"], {
                     "default": "png",
                 }),
-                "response_format": (["b64_json", "url"], {
+                "返回数据格式": (["b64_json", "url"], {
                     "default": "b64_json",
                 }),
-                "watermark": ("BOOLEAN", {
+                "启用水印": ("BOOLEAN", {
                     "default": False,
                 }),
-                "optimize_prompt_mode": (["standard", "fast", "disabled"], {
+                "提示词自动优化": (["standard", "fast", "disabled"], {
                     "default": "standard",
                 }),
-                "seed": ("INT", {
+                "随机种子": ("INT", {
                     "default": -1,
                     "min": -1,
                     "max": 0x7FFFFFFF,
                 }),
-                "guidance_scale": ("FLOAT", {
+                "引导强度": ("FLOAT", {
                     "default": 2.5,
                     "min": 1.0,
                     "max": 10.0,
@@ -271,27 +271,49 @@ class JMCAI_ModelArkImageGenerate:
 
     def generate(
         self,
-        prompt,
-        api_key,
-        base_url,
-        model_name,
-        size,
-        ref_images=None,
-        image1=None,
-        image2=None,
-        image3=None,
-        custom_model="",
-        custom_size="",
-        sequential_image_generation="disabled",
-        max_images=15,
-        output_format="png",
-        response_format="b64_json",
-        watermark=False,
-        optimize_prompt_mode="standard",
-        seed=-1,
-        guidance_scale=2.5,
-        model_family="auto",
+        提示词=None,
+        API密钥=None,
+        接口地址=None,
+        模型名称=None,
+        图像尺寸=None,
+        多参考图批次=None,
+        参考图1=None,
+        参考图2=None,
+        参考图3=None,
+        自定义模型="",
+        自定义尺寸="",
+        多图连续生成="disabled",
+        最大生成张数=15,
+        输出格式="png",
+        返回数据格式="b64_json",
+        启用水印=False,
+        提示词自动优化="standard",
+        随机种子=-1,
+        引导强度=2.5,
+        模型架构系列="auto",
+        **kwargs,
     ):
+        prompt = kwargs.get("prompt", 提示词)
+        api_key = kwargs.get("api_key", API密钥)
+        base_url = kwargs.get("base_url", 接口地址)
+        model_name = kwargs.get("model_name", 模型名称)
+        size = kwargs.get("size", 图像尺寸)
+        ref_images = kwargs.get("ref_images", 多参考图批次)
+        image1 = kwargs.get("image1", 参考图1)
+        image2 = kwargs.get("image2", 参考图2)
+        image3 = kwargs.get("image3", 参考图3)
+        custom_model = kwargs.get("custom_model", 自定义模型)
+        custom_size = kwargs.get("custom_size", 自定义尺寸)
+        sequential_image_generation = kwargs.get("sequential_image_generation", 多图连续生成)
+        max_images = kwargs.get("max_images", 最大生成张数)
+        output_format = kwargs.get("output_format", 输出格式)
+        response_format = kwargs.get("response_format", 返回数据格式)
+        watermark = kwargs.get("watermark", 启用水印)
+        optimize_prompt_mode = kwargs.get("optimize_prompt_mode", 提示词自动优化)
+        seed = kwargs.get("seed", 随机种子)
+        guidance_scale = kwargs.get("guidance_scale", 引导强度)
+        model_family = kwargs.get("model_family", 模型架构系列)
+
         if not prompt or not prompt.strip():
             raise ValueError("[JMCAI ModelArk] Prompt is empty.")
         if not api_key or not api_key.strip():

@@ -39,7 +39,7 @@ class JMCAI_GeminiImageGenerate:
     FUNCTION = "generate"
     OUTPUT_NODE = True
     RETURN_TYPES = ("IMAGE", "STRING",)
-    RETURN_NAMES = ("images", "text_response",)
+    RETURN_NAMES = ("图像", "文本响应",)
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -53,26 +53,26 @@ class JMCAI_GeminiImageGenerate:
 
         return {
             "required": {
-                "prompt": ("STRING", {
+                "提示词": ("STRING", {
                     "multiline": True,
                     "default": "",
-                    "placeholder": "Enter your image generation prompt here..."
+                    "placeholder": "请输入图片生成提示词（Prompt）..."
                 }),
-                "api_key": ("STRING", {
+                "API密钥": ("STRING", {
                     "default": saved_key,
-                    "placeholder": "AIzaSy... (Google API Key)"
+                    "placeholder": "AIzaSy... (填写 Google API Key)"
                 }),
-                "model_name": (models, {
+                "模型名称": (models, {
                     "default": models[0] if models else "gemini-3-pro-image-preview"
                 }),
             },
             "optional": {
-                "num_images": ("INT", {
+                "生成张数": ("INT", {
                     "default": 1,
                     "min": 1,
                     "max": 4,
                 }),
-                "aspect_ratio": ([
+                "画面比例": ([
                     "Default (默认比例)",
                     "1:1 (方图)",
                     "16:9 (横屏宽屏)",
@@ -85,7 +85,7 @@ class JMCAI_GeminiImageGenerate:
                 ], {
                     "default": "Default (默认比例)"
                 }),
-                "resolution": ([
+                "分辨率": ([
                     "Default (默认清晰度)",
                     "1K (标准清晰度 1K)",
                     "2K (高清分辨率 2K)",
@@ -93,20 +93,20 @@ class JMCAI_GeminiImageGenerate:
                 ], {
                     "default": "Default (默认清晰度)"
                 }),
-                "base_url": ("STRING", {
+                "接口地址": ("STRING", {
                     "default": saved_url,
-                    "placeholder": "Leave empty for default, or set proxy URL"
+                    "placeholder": "留空为官方默认，支持设置反代/中转代理 URL"
                 }),
-                "ref_images": ("IMAGE",),
-                "image1": ("IMAGE",),
-                "image2": ("IMAGE",),
-                "image3": ("IMAGE",),
-                "mask": ("MASK",),
-                "custom_model": ("STRING", {
+                "多参考图批次": ("IMAGE",),
+                "参考图1": ("IMAGE",),
+                "参考图2": ("IMAGE",),
+                "参考图3": ("IMAGE",),
+                "局部重绘遮罩": ("MASK",),
+                "自定义模型": ("STRING", {
                     "default": "",
-                    "placeholder": "Leave empty to use dropdown; fill to override"
+                    "placeholder": "留空默认使用下拉框，输入则优先指定模型名称"
                 }),
-                "seed": ("INT", {
+                "随机种子": ("INT", {
                     "default": 0,
                     "min": 0,
                     "max": 0x7FFFFFFF,
@@ -118,12 +118,40 @@ class JMCAI_GeminiImageGenerate:
     def IS_CHANGED(cls, **kwargs):
         return float("NaN")
 
-    def generate(self, prompt, api_key, model_name, num_images=1,
-                 aspect_ratio="Default", resolution="Default",
-                 base_url="", ref_images=None,
-                 image1=None, image2=None, image3=None,
-                 mask=None, custom_model="", seed=0):
+    def generate(
+        self,
+        提示词=None,
+        API密钥=None,
+        模型名称=None,
+        生成张数=1,
+        画面比例="Default (默认比例)",
+        分辨率="Default (默认清晰度)",
+        接口地址="",
+        多参考图批次=None,
+        参考图1=None,
+        参考图2=None,
+        参考图3=None,
+        局部重绘遮罩=None,
+        自定义模型="",
+        随机种子=0,
+        **kwargs,
+    ):
         import torch
+
+        prompt = kwargs.get("prompt", 提示词)
+        api_key = kwargs.get("api_key", API密钥)
+        model_name = kwargs.get("model_name", 模型名称)
+        num_images = kwargs.get("num_images", 生成张数)
+        aspect_ratio = kwargs.get("aspect_ratio", 画面比例)
+        resolution = kwargs.get("resolution", 分辨率)
+        base_url = kwargs.get("base_url", 接口地址)
+        ref_images = kwargs.get("ref_images", 多参考图批次)
+        image1 = kwargs.get("image1", 参考图1)
+        image2 = kwargs.get("image2", 参考图2)
+        image3 = kwargs.get("image3", 参考图3)
+        mask = kwargs.get("mask", 局部重绘遮罩)
+        custom_model = kwargs.get("custom_model", 自定义模型)
+        seed = kwargs.get("seed", 随机种子)
 
         if not prompt or not prompt.strip():
             raise ValueError("[JMCAI Gemini] Prompt is empty. Please enter a prompt.")

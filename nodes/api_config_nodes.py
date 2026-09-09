@@ -23,43 +23,46 @@ API_TYPES = list(BUILTIN_MODELS.keys())
 
 class JMCAI_APIImageConfigLoader:
     """
-    Load API configuration from persistent storage.
-
-    Outputs api_key, base_url, and model_name for connecting to downstream
-    generation nodes. Configuration is stored in api_config.json.
+    从本地持久化配置文件 (api_config.json) 读取 API 密钥与地址配置。
+    输出 API密钥、接口地址和模型名称，直连下游 API 生图节点。
     """
 
     CATEGORY = "JMCAI❤/API配置"
     FUNCTION = "load"
     RETURN_TYPES = ("STRING", "STRING", "STRING",)
-    RETURN_NAMES = ("api_key", "base_url", "model_name",)
+    RETURN_NAMES = ("API密钥", "接口地址", "模型名称",)
 
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "api_type": (API_TYPES, {
+                "平台类型": (API_TYPES, {
                     "default": "OpenAI Compatible"
                 }),
             },
             "optional": {
-                "api_key_override": ("STRING", {
+                "覆盖API密钥": ("STRING", {
                     "default": "",
-                    "placeholder": "Override saved API key (leave empty to use saved)"
+                    "placeholder": "留空使用已保存配置；填入可临时覆盖"
                 }),
-                "base_url_override": ("STRING", {
+                "覆盖接口地址": ("STRING", {
                     "default": "",
-                    "placeholder": "Override saved base URL (leave empty to use saved)"
+                    "placeholder": "留空使用已保存地址；填入可临时覆盖"
                 }),
-                "model_override": ("STRING", {
+                "覆盖模型名称": ("STRING", {
                     "default": "",
-                    "placeholder": "Override saved model (leave empty to use saved)"
+                    "placeholder": "留空使用已保存模型；填入可临时覆盖"
                 }),
             },
         }
 
-    def load(self, api_type, api_key_override="", base_url_override="", model_override=""):
-        """Load API configuration, applying any overrides."""
+    def load(self, 平台类型="OpenAI Compatible", 覆盖API密钥="", 覆盖接口地址="", 覆盖模型名称="", **kwargs):
+        """加载 API 配置，支持中英文双入参兼容。"""
+        api_type = kwargs.get("api_type", 平台类型)
+        api_key_override = kwargs.get("api_key_override", 覆盖API密钥)
+        base_url_override = kwargs.get("base_url_override", 覆盖接口地址)
+        model_override = kwargs.get("model_override", 覆盖模型名称)
+
         cfg = get_api_config(api_type)
 
         api_key = api_key_override.strip() if api_key_override and api_key_override.strip() else cfg.get("api_key", "")
@@ -67,66 +70,71 @@ class JMCAI_APIImageConfigLoader:
         model_name = model_override.strip() if model_override and model_override.strip() else cfg.get("model_name", "")
 
         if not api_key:
-            logger.warning(f"[JMCAI ConfigLoader] No API key found for {api_type}. Please configure it.")
+            logger.warning(f"[JMCAI ConfigLoader] 未检测到 {api_type} 的 API Key，请先配置。")
         else:
-            logger.info(f"[JMCAI ConfigLoader] Loaded config for {api_type} | Model: {model_name}")
+            logger.info(f"[JMCAI ConfigLoader] 已成功载入 {api_type} 配置 | 模型: {model_name}")
 
         return (api_key, base_url, model_name,)
 
 
 class JMCAI_APIImageConfigSaver:
     """
-    Save API configuration to persistent storage.
-
-    Persists api_key, base_url, model_name, and optional custom models
-    to api_config.json for use across ComfyUI sessions.
+    将 API 密钥、接口 Base URL 和自定义模型持久化保存至 api_config.json，
+    重启 ComfyUI 依然有效。
     """
 
     CATEGORY = "JMCAI❤/API配置"
     FUNCTION = "save"
     OUTPUT_NODE = True
     RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("status",)
+    RETURN_NAMES = ("保存状态",)
 
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "api_type": (API_TYPES, {
+                "平台类型": (API_TYPES, {
                     "default": "OpenAI Compatible"
                 }),
-                "api_key": ("STRING", {
+                "API密钥": ("STRING", {
                     "default": "",
-                    "placeholder": "API Key to save"
+                    "placeholder": "输入需要持久化保存的 API Key (如 sk-...)"
                 }),
             },
             "optional": {
-                "base_url": ("STRING", {
+                "接口地址": ("STRING", {
                     "default": "",
-                    "placeholder": "Base URL to save (leave empty to keep current)"
+                    "placeholder": "输入接口 Base URL（留空则保持现有保存值）"
                 }),
-                "model_name": ("STRING", {
+                "模型名称": ("STRING", {
                     "default": "",
-                    "placeholder": "Model name to save (leave empty to keep current)"
+                    "placeholder": "输入默认选择的模型（留空则保持现有保存值）"
                 }),
-                "add_custom_model_name": ("STRING", {
+                "新增自定义模型": ("STRING", {
                     "default": "",
-                    "placeholder": "New custom model to add to the list"
+                    "placeholder": "输入要加入下拉模型列表的新模型名称"
                 }),
-                "remove_custom_model_name": ("STRING", {
+                "移除自定义模型": ("STRING", {
                     "default": "",
-                    "placeholder": "Custom model to remove from the list"
+                    "placeholder": "输入要从下拉列表中移除的自定义模型名称"
                 }),
             },
         }
 
-    def save(self, api_type, api_key,
-             base_url="", model_name="",
-             add_custom_model_name="", remove_custom_model_name=""):
-        """Save API configuration and manage custom models."""
+    def save(self, 平台类型="OpenAI Compatible", API密钥="",
+             接口地址="", 模型名称="",
+             新增自定义模型="", 移除自定义模型="", **kwargs):
+        """保存 API 配置并动态管理自定义模型列表。"""
+        api_type = kwargs.get("api_type", 平台类型)
+        api_key = kwargs.get("api_key", API密钥)
+        base_url = kwargs.get("base_url", 接口地址)
+        model_name = kwargs.get("model_name", 模型名称)
+        add_custom_model_name = kwargs.get("add_custom_model_name", 新增自定义模型)
+        remove_custom_model_name = kwargs.get("remove_custom_model_name", 移除自定义模型)
+
         status_parts = []
 
-        # Save main config
+        # 保存主配置
         save_kwargs = {}
         if api_key and api_key.strip():
             save_kwargs["api_key"] = api_key.strip()
@@ -137,25 +145,25 @@ class JMCAI_APIImageConfigSaver:
 
         if save_kwargs:
             set_api_config(api_type, **save_kwargs)
-            status_parts.append(f"Saved config for {api_type}: {list(save_kwargs.keys())}")
+            status_parts.append(f"已成功保存 {api_type} 配置: {list(save_kwargs.keys())}")
 
-        # Add custom model
+        # 添加自定义模型
         if add_custom_model_name and add_custom_model_name.strip():
             added = add_custom_model(api_type, add_custom_model_name.strip())
             if added:
-                status_parts.append(f"Added custom model: {add_custom_model_name.strip()}")
+                status_parts.append(f"已新增模型: {add_custom_model_name.strip()}")
             else:
-                status_parts.append(f"Model already exists: {add_custom_model_name.strip()}")
+                status_parts.append(f"模型已存在: {add_custom_model_name.strip()}")
 
-        # Remove custom model
+        # 移除自定义模型
         if remove_custom_model_name and remove_custom_model_name.strip():
             removed = remove_custom_model(api_type, remove_custom_model_name.strip())
             if removed:
-                status_parts.append(f"Removed custom model: {remove_custom_model_name.strip()}")
+                status_parts.append(f"已移除模型: {remove_custom_model_name.strip()}")
             else:
-                status_parts.append(f"Model not found: {remove_custom_model_name.strip()}")
+                status_parts.append(f"未找到该模型: {remove_custom_model_name.strip()}")
 
-        status = " | ".join(status_parts) if status_parts else "No changes to save"
+        status = " | ".join(status_parts) if status_parts else "未发生任何配置更改"
         logger.info(f"[JMCAI ConfigSaver] {status}")
         return (status,)
 

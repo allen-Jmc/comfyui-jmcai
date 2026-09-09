@@ -78,7 +78,7 @@ class JMCAI_GrokImageGenerate:
     FUNCTION = "generate"
     OUTPUT_NODE = True
     RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("images",)
+    RETURN_NAMES = ("图像",)
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -92,45 +92,45 @@ class JMCAI_GrokImageGenerate:
 
         return {
             "required": {
-                "prompt": ("STRING", {
+                "提示词": ("STRING", {
                     "multiline": True,
                     "default": "",
-                    "placeholder": "Enter your image generation prompt here..."
+                    "placeholder": "请输入图片生成提示词（Prompt）..."
                 }),
-                "api_key": ("STRING", {
+                "API密钥": ("STRING", {
                     "default": saved_key,
-                    "placeholder": "xai-... (xAI API Key)"
+                    "placeholder": "xai-... (填写 xAI API Key)"
                 }),
-                "model_name": (models, {
+                "模型名称": (models, {
                     "default": models[0] if models else "grok-imagine-image-quality"
                 }),
             },
             "optional": {
-                "num_images": ("INT", {
+                "生成张数": ("INT", {
                     "default": 1,
                     "min": 1,
                     "max": 10,
                 }),
-                "aspect_ratio": (SUPPORTED_ASPECT_RATIOS, {
+                "画面比例": (SUPPORTED_ASPECT_RATIOS, {
                     "default": "1:1 (正方形)",
                 }),
-                "resolution": (["1k (标清 1K)", "2k (高清 2K)"], {
+                "分辨率": (["1k (标清 1K)", "2k (高清 2K)"], {
                     "default": "1k (标清 1K)",
                 }),
-                "base_url": ("STRING", {
+                "接口地址": ("STRING", {
                     "default": saved_url,
-                    "placeholder": "https://api.x.ai (default)"
+                    "placeholder": "https://api.x.ai (默认官方地址)"
                 }),
-                "ref_images": ("IMAGE",),
-                "image1": ("IMAGE",),
-                "image2": ("IMAGE",),
-                "image3": ("IMAGE",),
-                "mask": ("MASK",),
-                "custom_model": ("STRING", {
+                "多参考图批次": ("IMAGE",),
+                "参考图1": ("IMAGE",),
+                "参考图2": ("IMAGE",),
+                "参考图3": ("IMAGE",),
+                "局部重绘遮罩": ("MASK",),
+                "自定义模型": ("STRING", {
                     "default": "",
-                    "placeholder": "Leave empty to use dropdown; fill to override"
+                    "placeholder": "留空默认使用下拉框，输入则优先指定模型名称"
                 }),
-                "seed": ("INT", {
+                "随机种子": ("INT", {
                     "default": 0,
                     "min": 0,
                     "max": 0x7FFFFFFF,
@@ -195,11 +195,38 @@ class JMCAI_GrokImageGenerate:
         except Exception:
             return None
 
-    def generate(self, prompt, api_key, model_name, num_images=1,
-                 aspect_ratio="1:1", resolution="1k",
-                 base_url="", ref_images=None,
-                 image1=None, image2=None, image3=None,
-                 mask=None, custom_model="", seed=0):
+    def generate(
+        self,
+        提示词=None,
+        API密钥=None,
+        模型名称=None,
+        生成张数=1,
+        画面比例="1:1 (正方形)",
+        分辨率="1k (标清 1K)",
+        接口地址="",
+        多参考图批次=None,
+        参考图1=None,
+        参考图2=None,
+        参考图3=None,
+        局部重绘遮罩=None,
+        自定义模型="",
+        随机种子=0,
+        **kwargs,
+    ):
+        prompt = kwargs.get("prompt", 提示词)
+        api_key = kwargs.get("api_key", API密钥)
+        model_name = kwargs.get("model_name", 模型名称)
+        num_images = kwargs.get("num_images", 生成张数)
+        aspect_ratio = kwargs.get("aspect_ratio", 画面比例)
+        resolution = kwargs.get("resolution", 分辨率)
+        base_url = kwargs.get("base_url", 接口地址)
+        ref_images = kwargs.get("ref_images", 多参考图批次)
+        image1 = kwargs.get("image1", 参考图1)
+        image2 = kwargs.get("image2", 参考图2)
+        image3 = kwargs.get("image3", 参考图3)
+        mask = kwargs.get("mask", 局部重绘遮罩)
+        custom_model = kwargs.get("custom_model", 自定义模型)
+        seed = kwargs.get("seed", 随机种子)
         if not prompt or not prompt.strip():
             raise ValueError("[JMCAI Grok] Prompt is empty.")
         if not api_key or not api_key.strip():

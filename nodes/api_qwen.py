@@ -60,7 +60,7 @@ class JMCAI_QwenImageGenerate:
     FUNCTION = "generate"
     OUTPUT_NODE = True
     RETURN_TYPES = ("IMAGE", "STRING",)
-    RETURN_NAMES = ("images", "text_response",)
+    RETURN_NAMES = ("图像", "文本响应",)
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -74,19 +74,19 @@ class JMCAI_QwenImageGenerate:
 
         return {
             "required": {
-                "prompt": ("STRING", {
+                "提示词": ("STRING", {
                     "multiline": True,
                     "default": "",
-                    "placeholder": "Enter your image generation prompt here..."
+                    "placeholder": "请输入图片生成提示词（Prompt）..."
                 }),
-                "api_key": ("STRING", {
+                "API密钥": ("STRING", {
                     "default": saved_key,
-                    "placeholder": "sk-... (DashScope API Key)"
+                    "placeholder": "sk-... (填写 DashScope API Key)"
                 }),
-                "model_name": (models, {
+                "模型名称": (models, {
                     "default": models[0] if models else "qwen-image-plus"
                 }),
-                "size": ([
+                "图像尺寸": ([
                     "1664*928 (16:9 · 宽屏推荐)",
                     "1472*1104 (4:3 · 标准横屏)",
                     "1328*1328 (1:1 · 原生方图)",
@@ -100,40 +100,40 @@ class JMCAI_QwenImageGenerate:
                 }),
             },
             "optional": {
-                "num_images": ("INT", {
+                "生成张数": ("INT", {
                     "default": 1,
                     "min": 1,
                     "max": 4,
                 }),
-                "custom_size": ("STRING", {
+                "自定义尺寸": ("STRING", {
                     "default": "",
                     "placeholder": "自定义宽*高，如 1536*1024"
                 }),
-                "base_url": ("STRING", {
+                "接口地址": ("STRING", {
                     "default": saved_url,
                     "placeholder": "https://dashscope.aliyuncs.com/api/v1"
                 }),
-                "ref_images": ("IMAGE",),
-                "image1": ("IMAGE",),
-                "image2": ("IMAGE",),
-                "image3": ("IMAGE",),
-                "mask": ("MASK",),
-                "negative_prompt": ("STRING", {
+                "多参考图批次": ("IMAGE",),
+                "参考图1": ("IMAGE",),
+                "参考图2": ("IMAGE",),
+                "参考图3": ("IMAGE",),
+                "局部重绘遮罩": ("MASK",),
+                "负向提示词": ("STRING", {
                     "default": "",
                     "multiline": True,
-                    "placeholder": "Negative prompt"
+                    "placeholder": "反向负面提示词（Negative Prompt）"
                 }),
-                "watermark": ("BOOLEAN", {
+                "启用水印": ("BOOLEAN", {
                     "default": False,
                 }),
-                "prompt_extend": ("BOOLEAN", {
+                "提示词自动扩写": ("BOOLEAN", {
                     "default": True,
                 }),
-                "custom_model": ("STRING", {
+                "自定义模型": ("STRING", {
                     "default": "",
-                    "placeholder": "Leave empty to use dropdown"
+                    "placeholder": "留空默认使用下拉框，输入则优先指定模型名称"
                 }),
-                "seed": ("INT", {
+                "随机种子": ("INT", {
                     "default": 0,
                     "min": 0,
                     "max": 0x7FFFFFFF,
@@ -155,13 +155,46 @@ class JMCAI_QwenImageGenerate:
         tmp.close()
         return tmp.name
 
-    def generate(self, prompt, api_key, model_name, size, num_images=1,
-                 custom_size="", base_url="", ref_images=None,
-                 image1=None, image2=None, image3=None,
-                 mask=None,
-                 negative_prompt="", watermark=False, prompt_extend=True,
-                 custom_model="", seed=0):
+    def generate(
+        self,
+        提示词=None,
+        API密钥=None,
+        模型名称=None,
+        图像尺寸=None,
+        生成张数=1,
+        自定义尺寸="",
+        接口地址="",
+        多参考图批次=None,
+        参考图1=None,
+        参考图2=None,
+        参考图3=None,
+        局部重绘遮罩=None,
+        负向提示词="",
+        启用水印=False,
+        提示词自动扩写=True,
+        自定义模型="",
+        随机种子=0,
+        **kwargs,
+    ):
         import os
+
+        prompt = kwargs.get("prompt", 提示词)
+        api_key = kwargs.get("api_key", API密钥)
+        model_name = kwargs.get("model_name", 模型名称)
+        size = kwargs.get("size", 图像尺寸)
+        num_images = kwargs.get("num_images", 生成张数)
+        custom_size = kwargs.get("custom_size", 自定义尺寸)
+        base_url = kwargs.get("base_url", 接口地址)
+        ref_images = kwargs.get("ref_images", 多参考图批次)
+        image1 = kwargs.get("image1", 参考图1)
+        image2 = kwargs.get("image2", 参考图2)
+        image3 = kwargs.get("image3", 参考图3)
+        mask = kwargs.get("mask", 局部重绘遮罩)
+        negative_prompt = kwargs.get("negative_prompt", 负向提示词)
+        watermark = kwargs.get("watermark", 启用水印)
+        prompt_extend = kwargs.get("prompt_extend", 提示词自动扩写)
+        custom_model = kwargs.get("custom_model", 自定义模型)
+        seed = kwargs.get("seed", 随机种子)
 
         if not prompt or not prompt.strip():
             raise ValueError("[JMCAI Qwen] Prompt is empty.")

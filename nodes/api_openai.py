@@ -233,7 +233,7 @@ class JMCAI_OpenAIImageGenerate:
     FUNCTION = "generate"
     OUTPUT_NODE = True
     RETURN_TYPES = ("IMAGE",)
-    RETURN_NAMES = ("images",)
+    RETURN_NAMES = ("图像",)
 
     @classmethod
     def INPUT_TYPES(cls):
@@ -249,23 +249,23 @@ class JMCAI_OpenAIImageGenerate:
 
         return {
             "required": {
-                "prompt": ("STRING", {
+                "提示词": ("STRING", {
                     "multiline": True,
                     "default": "",
-                    "placeholder": "Enter your image generation prompt here..."
+                    "placeholder": "请输入图片生成提示词（Prompt）..."
                 }),
-                "api_key": ("STRING", {
+                "API密钥": ("STRING", {
                     "default": saved_key,
-                    "placeholder": "sk-... (OpenAI / Third-party API Key)"
+                    "placeholder": "sk-... (填写 OpenAI 或第三方兼容 API Key)"
                 }),
-                "base_url": ("STRING", {
+                "接口地址": ("STRING", {
                     "default": saved_url,
-                    "placeholder": "https://api.openai.com (Auto trims trailing /v1)"
+                    "placeholder": "https://api.openai.com (自动识别并去除末尾 /v1)"
                 }),
-                "model_name": (models, {
+                "模型名称": (models, {
                     "default": default_model if models else "gpt-image-2"
                 }),
-                "size": ([
+                "图像尺寸": ([
                     "auto (GPT-Image 自动最佳)",
                     "1024x1024 (通用 · 1:1 方图)",
                     "1536x1024 (GPT-Image · 3:2 横屏)",
@@ -284,39 +284,39 @@ class JMCAI_OpenAIImageGenerate:
                 }),
             },
             "optional": {
-                "num_images": ("INT", {
+                "生成张数": ("INT", {
                     "default": 1,
                     "min": 1,
                     "max": 10,
                 }),
-                "quality": (["auto", "high (高清/HD)", "medium (标准/Standard)", "low (极速/Low)"], {
+                "画质质量": (["auto", "high (高清/HD)", "medium (标准/Standard)", "low (极速/Low)"], {
                     "default": "auto"
                 }),
-                "ref_images": ("IMAGE",),
-                "image1": ("IMAGE",),
-                "image2": ("IMAGE",),
-                "image3": ("IMAGE",),
-                "mask": ("MASK",),
-                "custom_model": ("STRING", {
+                "多参考图批次": ("IMAGE",),
+                "参考图1": ("IMAGE",),
+                "参考图2": ("IMAGE",),
+                "参考图3": ("IMAGE",),
+                "局部重绘遮罩": ("MASK",),
+                "自定义模型": ("STRING", {
                     "default": "",
-                    "placeholder": "Leave empty to use dropdown; fill to override"
+                    "placeholder": "留空默认使用下拉框，输入则优先指定模型名称"
                 }),
-                "custom_size": ("STRING", {
+                "自定义尺寸": ("STRING", {
                     "default": "",
-                    "placeholder": "Size override, e.g. 1536x864"
+                    "placeholder": "尺寸覆盖输入，例如 1536x864"
                 }),
-                "output_format": (["png", "jpeg", "webp"], {
+                "输出格式": (["png", "jpeg", "webp"], {
                     "default": "png"
                 }),
-                "output_compression": ("INT", {
+                "压缩质量": ("INT", {
                     "default": 100,
                     "min": 0,
                     "max": 100,
                 }),
-                "background": (["auto", "opaque", "transparent"], {
+                "背景模式": (["auto", "opaque", "transparent"], {
                     "default": "auto"
                 }),
-                "moderation": (["auto", "low"], {
+                "安全审查级别": (["auto", "low"], {
                     "default": "auto"
                 }),
             },
@@ -328,25 +328,45 @@ class JMCAI_OpenAIImageGenerate:
 
     def generate(
         self,
-        prompt,
-        api_key,
-        base_url,
-        model_name,
-        size,
-        num_images=1,
-        quality="auto",
-        ref_images=None,
-        image1=None,
-        image2=None,
-        image3=None,
-        mask=None,
-        custom_model="",
-        custom_size="",
-        output_format="png",
-        output_compression=100,
-        background="auto",
-        moderation="auto",
+        提示词=None,
+        API密钥=None,
+        接口地址=None,
+        模型名称=None,
+        图像尺寸=None,
+        生成张数=1,
+        画质质量="auto",
+        多参考图批次=None,
+        参考图1=None,
+        参考图2=None,
+        参考图3=None,
+        局部重绘遮罩=None,
+        自定义模型="",
+        自定义尺寸="",
+        输出格式="png",
+        压缩质量=100,
+        背景模式="auto",
+        安全审查级别="auto",
+        **kwargs,
     ):
+        prompt = kwargs.get("prompt", 提示词)
+        api_key = kwargs.get("api_key", API密钥)
+        base_url = kwargs.get("base_url", 接口地址)
+        model_name = kwargs.get("model_name", 模型名称)
+        size = kwargs.get("size", 图像尺寸)
+        num_images = kwargs.get("num_images", 生成张数)
+        quality = kwargs.get("quality", 画质质量)
+        ref_images = kwargs.get("ref_images", 多参考图批次)
+        image1 = kwargs.get("image1", 参考图1)
+        image2 = kwargs.get("image2", 参考图2)
+        image3 = kwargs.get("image3", 参考图3)
+        mask = kwargs.get("mask", 局部重绘遮罩)
+        custom_model = kwargs.get("custom_model", 自定义模型)
+        custom_size = kwargs.get("custom_size", 自定义尺寸)
+        output_format = kwargs.get("output_format", 输出格式)
+        output_compression = kwargs.get("output_compression", 压缩质量)
+        background = kwargs.get("background", 背景模式)
+        moderation = kwargs.get("moderation", 安全审查级别)
+
         if not prompt or not prompt.strip():
             raise ValueError("[JMCAI OpenAI] Prompt is empty.")
         if not api_key or not api_key.strip():
