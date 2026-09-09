@@ -51,7 +51,7 @@
 |:---|:---|:---|
 | **JMCAI❤ API图像保存与预览** (`JMCAI_APIImageSave`) | 保存 API 生成图片并生成预览 | 自动附加生成 Prompt 与元数据，兼容 ComfyUI 画布实时预览。 |
 | **JmcAI Safe Load Image** (`JMCSafeLoadImage`) | 客户端资产安全加载节点 | 防御前端 `EMPTY_REJECT_IN_UI.png` 占位符引发的崩溃，安全回退。 |
-| **JMCAI❤ 局部裁切预处理** (`JMCAI_LocalCropPreprocess`) | 自动提取遮罩区域并缩放对齐 | 支持 **部分运行 (Partial Run)** 实时预览构图，秒级微调无缝贴合。 |
+| **JMCAI❤ 局部裁切预处理** (`JMCAI_LocalCropPreprocess`) | 自动提取遮罩区域并缩放对齐 | 支持 **部分运行 (Partial Run)** 实时预览构图；提供 4 组输出端口（`裁切图像`、`裁切遮罩`、`裁切数据`，以及全新的 `裁切图像(无遮罩)` 便于图像对比）。 |
 | **JMCAI❤ 局部裁切贴回** (`JMCAI_LocalCropPaste`) | 局部重绘精准还原回原图 | 支持平滑羽化边缘，确保重绘区域与原始图像过渡自然。 |
 | **JMCAI❤ 图像组合批次 (多重)** (`JMCAI_ImageBatch_Multi`) | 动态多图合并为批次张量 | 自由调整输入端口数量，自动完成图像规格化与比例对齐。 |
 

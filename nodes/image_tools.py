@@ -120,8 +120,8 @@ class JmcAI_LocalCropPreprocess:
             }
         }
 
-    RETURN_TYPES = ("IMAGE", "MASK", "BANANACROP_DATA")
-    RETURN_NAMES = ("裁切图像", "裁切遮罩", "裁切数据")
+    RETURN_TYPES = ("IMAGE", "MASK", "BANANACROP_DATA", "IMAGE")
+    RETURN_NAMES = ("裁切图像", "裁切遮罩", "裁切数据", "裁切图像(无遮罩)")
     FUNCTION = "preprocess"
     CATEGORY = "JMCAI❤/图像工具"
 
@@ -152,7 +152,11 @@ class JmcAI_LocalCropPreprocess:
         if len(non_zero[0]) == 0:
             jm_log("WARNING", "LocalCrop", "未在遮罩中发现有效区域，将返回全图")
             crop_data = {"x1": 0, "y1": 0, "x2": img_w, "y2": img_h, "orig_w": img_w, "orig_h": img_h}
-            return (image, mask.unsqueeze(-1) if len(mask.shape)==3 else mask, crop_data)
+            ret_mask = mask.unsqueeze(-1) if len(mask.shape) == 3 else mask
+            return {
+                "ui": {"images": []},
+                "result": (image, ret_mask, crop_data, image)
+            }
 
         # 核心区域
         y_min, y_max = np.min(non_zero[0]), np.max(non_zero[1]) # 注意：此处原逻辑可能有误，应为 non_zero[0] 的 min/max
@@ -240,6 +244,9 @@ class JmcAI_LocalCropPreprocess:
             tmp_mask = torch.nn.functional.interpolate(tmp_mask.float(), size=(new_h, new_w), mode='nearest')
             crop_mask = tmp_mask.squeeze(1) if len(crop_mask.shape) == 3 else tmp_mask.squeeze(0).squeeze(0)
 
+        # 保留无遮罩涂鸦的纯净裁切图像（用于下游对比或纯图处理）
+        crop_image_clean = crop_image.clone()
+
         # 6.5 涂鸦叠加 (Visual Overlay)
         if overlay_opacity > 0:
             rgb = self.hex_to_rgb(overlay_color)
@@ -283,7 +290,7 @@ class JmcAI_LocalCropPreprocess:
                     }
                 ]
             },
-            "result": (crop_image, crop_mask, crop_data)
+            "result": (crop_image, crop_mask, crop_data, crop_image_clean)
         }
 
     @classmethod
