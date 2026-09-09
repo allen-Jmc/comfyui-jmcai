@@ -111,21 +111,21 @@ pip install -r comfyui-jmcai/requirements.txt
 
 ### 场景 A：使用中转站调用 GPT-Image-2
 1. 在画布中添加 **`JMCAI❤ OpenAI/GPT-Image-2 生图`** 节点。
-2. `api_key`：填写您从中转站获取的密钥（如 `sk-xxxx`）。
-3. `base_url`：填写中转站地址（例如 `https://api.your-relay.com`，即使填入带有 `/v1` 的路径，节点内置的清洗器也会自动智能处理）。
-4. `model_name`：选择或手动输入 `gpt-image-2`。
-5. 连接 `prompt` 即可直接生成；若需要多图参考或垫图，连接至 `ref_images` 端口。
+2. **`API密钥`**：填写您从中转站获取的密钥（如 `sk-xxxx`）。
+3. **`接口地址`**：填写中转站地址（例如 `https://api.your-relay.com`，即使填入带有 `/v1` 的路径，节点内置的清洗器也会自动智能处理）。
+4. **`模型名称`**：选择或手动输入 `gpt-image-2`。
+5. 输入 **`提示词`** 即可直接生成；若需要多图参考或垫图，连接至 **`多参考图批次`** 或 **`参考图1~3`** 端口。
 
 ### 场景 B：使用中转站以 OpenAI 兼容格式调用 Nano Banana
 许多 API 中转站将 Google 的 Nano Banana 系列（`gemini-3-pro-image-preview` / `gemini-2.5-flash-image`）封装为标准 OpenAI 图像协议。
 1. 直接使用 **`JMCAI❤ OpenAI/GPT-Image-2 生图`** 节点。
-2. 填写中转站的 `api_key` 与 `base_url`。
-3. `model_name` 下拉选择 `gemini-3-pro-image-preview`（或输入中转站指定的模型别名）。
+2. 填写中转站的 **`API密钥`** 与 **`接口地址`**。
+3. **`模型名称`** 下拉选择 `gemini-3-pro-image-preview`（或输入中转站指定的模型别名）。
 4. 节点已对非 OpenAI 专有参数进行了自动兼容适配，中转站可无缝出图。
 
 ### 场景 C：持久化保存 API 配置
 1. 在画布中放置 **`JMCAI❤ API配置保存器`** 节点。
-2. 选择平台类型（如 `OpenAI Compatible`），填入您的 `api_key`、`base_url`，点击运行一次即可写入 `api_config.json`。
+2. 选择平台类型（如 `OpenAI Compatible`），填入您的 **`API密钥`**、**`接口地址`**，点击运行一次即可安全保存配置。
 3. 之后在任何工作流中，直接使用 **`JMCAI❤ API配置加载器`** 即可将配置注入生图节点，无需每次重复输入密钥。
 
 ---
