@@ -121,6 +121,7 @@ app.registerExtension({
             const oc = nodeType.prototype.onConfigure;
             nodeType.prototype.onConfigure = function () {
                 const r = oc ? oc.apply(this, arguments) : undefined;
+                cleanupLegacyInputs(this);
                 setTimeout(() => {
                     cleanupLegacyInputs(this);
                 }, 20);
@@ -130,10 +131,21 @@ app.registerExtension({
             const onCreated = nodeType.prototype.onNodeCreated;
             nodeType.prototype.onNodeCreated = function () {
                 const r = onCreated ? onCreated.apply(this, arguments) : undefined;
+                cleanupLegacyInputs(this);
                 setTimeout(() => {
                     cleanupLegacyInputs(this);
                 }, 30);
                 return r;
+            };
+
+            // 首次在画布上绘制时进行一次性自动自检清理，保证视觉即时生效
+            const origOnDrawForeground = nodeType.prototype.onDrawForeground;
+            nodeType.prototype.onDrawForeground = function (ctx) {
+                if (!this._jmcai_cleaned_legacy) {
+                    this._jmcai_cleaned_legacy = true;
+                    cleanupLegacyInputs(this);
+                }
+                return origOnDrawForeground ? origOnDrawForeground.apply(this, arguments) : undefined;
             };
 
             // 增加右键菜单项方便用户随时一键清理旧端口
@@ -162,20 +174,57 @@ app.registerExtension({
             "JMCAI_APIImageSave"
         ];
         if (node && API_IMAGE_NODE_NAMES.includes(node.type || node.comfyClass)) {
+            cleanupLegacyInputs(node);
             setTimeout(() => {
                 cleanupLegacyInputs(node);
             }, 50);
+        }
+    },
+    afterConfigureGraph() {
+        const API_IMAGE_NODE_NAMES = [
+            "JMCAI_OpenAIImageGenerate",
+            "JMCAI_GeminiImageGenerate",
+            "JMCAI_ModelArkImageGenerate",
+            "JMCAI_QwenImageGenerate",
+            "JMCAI_GLMImageGenerate",
+            "JMCAI_GrokImageGenerate",
+            "JMCAI_APIImageSave"
+        ];
+        if (app.graph && Array.isArray(app.graph._nodes)) {
+            for (const n of app.graph._nodes) {
+                if (n && API_IMAGE_NODE_NAMES.includes(n.type || n.comfyClass)) {
+                    cleanupLegacyInputs(n);
+                }
+            }
         }
     }
 });
 
 const LEGACY_INPUT_MAP = {
+    // 图像与遮罩连接端口
     "ref_images": "多参考图批次",
     "image1": "参考图1",
     "image2": "参考图2",
     "image3": "参考图3",
     "mask": "局部重绘遮罩",
-    "images": "图像"
+    "images": "图像",
+    // 基础入参被转为输入端口的场景兼容
+    "prompt": "提示词",
+    "api_key": "API密钥",
+    "base_url": "接口地址",
+    "model_name": "模型名称",
+    "custom_model": "自定义模型",
+    "size": "图像尺寸",
+    "custom_size": "自定义尺寸",
+    "n": "生成张数",
+    "quality": "画质质量",
+    "aspect_ratio": "画幅比例",
+    "seed": "随机种子",
+    "steps": "生成步数",
+    "guidance_scale": "引导系数",
+    "watermark": "官方水印",
+    "filename_prefix": "文件名保存前缀",
+    "output_dir": "自定义输出目录"
 };
 
 function cleanupLegacyInputs(node) {
@@ -188,8 +237,16 @@ function cleanupLegacyInputs(node) {
         const targetChineseName = LEGACY_INPUT_MAP[slot.name];
         if (!targetChineseName) continue;
 
-        // 检查该节点中是否已经存在对应的中文新端口
-        const targetIdx = node.inputs.findIndex(inp => inp && inp.name === targetChineseName);
+        // 查找或创建对应中文端口
+        let targetIdx = node.inputs.findIndex(inp => inp && inp.name === targetChineseName);
+        if (targetIdx === -1) {
+            // 如果中文端口尚未创建，主动创建它以承接连线
+            if (typeof node.addInput === "function") {
+                node.addInput(targetChineseName, slot.type || "IMAGE");
+                targetIdx = node.inputs.findIndex(inp => inp && inp.name === targetChineseName);
+            }
+        }
+
         if (targetIdx !== -1 && targetIdx !== i) {
             // 如果旧英文端口上有连线
             if (slot.link != null) {
@@ -212,8 +269,10 @@ function cleanupLegacyInputs(node) {
                 }
             }
             // 从节点上移除残留的旧英文端口
-            node.removeInput(i);
-            modified = true;
+            if (typeof node.removeInput === "function") {
+                node.removeInput(i);
+                modified = true;
+            }
         }
     }
 
@@ -221,7 +280,7 @@ function cleanupLegacyInputs(node) {
         if (typeof node.computeSize === "function") {
             const sz = node.computeSize();
             node.size[0] = Math.max(node.size[0], sz[0]);
-            node.size[1] = Math.max(node.size[1], sz[1]);
+            node.size[1] = Math.max(sz[1], 120);
         }
         if (typeof node.setDirtyCanvas === "function") {
             node.setDirtyCanvas(true, true);
