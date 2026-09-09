@@ -105,5 +105,126 @@ app.registerExtension({
                 }
             };
         }
+
+        // 自动清理 API 系列生图节点的旧英文残留端口并无缝平移连线
+        const API_IMAGE_NODE_NAMES = [
+            "JMCAI_OpenAIImageGenerate",
+            "JMCAI_GeminiImageGenerate",
+            "JMCAI_ModelArkImageGenerate",
+            "JMCAI_QwenImageGenerate",
+            "JMCAI_GLMImageGenerate",
+            "JMCAI_GrokImageGenerate",
+            "JMCAI_APIImageSave"
+        ];
+
+        if (API_IMAGE_NODE_NAMES.includes(nodeData.name)) {
+            const oc = nodeType.prototype.onConfigure;
+            nodeType.prototype.onConfigure = function () {
+                const r = oc ? oc.apply(this, arguments) : undefined;
+                setTimeout(() => {
+                    cleanupLegacyInputs(this);
+                }, 20);
+                return r;
+            };
+
+            const onCreated = nodeType.prototype.onNodeCreated;
+            nodeType.prototype.onNodeCreated = function () {
+                const r = onCreated ? onCreated.apply(this, arguments) : undefined;
+                setTimeout(() => {
+                    cleanupLegacyInputs(this);
+                }, 30);
+                return r;
+            };
+
+            // 增加右键菜单项方便用户随时一键清理旧端口
+            const origGetExtraMenuOptions = nodeType.prototype.getExtraMenuOptions;
+            nodeType.prototype.getExtraMenuOptions = function (_, options) {
+                if (origGetExtraMenuOptions) {
+                    origGetExtraMenuOptions.apply(this, arguments);
+                }
+                options.push({
+                    content: "JMCAI: 清理重复旧英文端口",
+                    callback: () => {
+                        cleanupLegacyInputs(this);
+                    }
+                });
+            };
+        }
+    },
+    loadedGraphNode(node) {
+        const API_IMAGE_NODE_NAMES = [
+            "JMCAI_OpenAIImageGenerate",
+            "JMCAI_GeminiImageGenerate",
+            "JMCAI_ModelArkImageGenerate",
+            "JMCAI_QwenImageGenerate",
+            "JMCAI_GLMImageGenerate",
+            "JMCAI_GrokImageGenerate",
+            "JMCAI_APIImageSave"
+        ];
+        if (node && API_IMAGE_NODE_NAMES.includes(node.type || node.comfyClass)) {
+            setTimeout(() => {
+                cleanupLegacyInputs(node);
+            }, 50);
+        }
     }
 });
+
+const LEGACY_INPUT_MAP = {
+    "ref_images": "多参考图批次",
+    "image1": "参考图1",
+    "image2": "参考图2",
+    "image3": "参考图3",
+    "mask": "局部重绘遮罩",
+    "images": "图像"
+};
+
+function cleanupLegacyInputs(node) {
+    if (!node || !Array.isArray(node.inputs)) return;
+
+    let modified = false;
+    for (let i = node.inputs.length - 1; i >= 0; i--) {
+        const slot = node.inputs[i];
+        if (!slot) continue;
+        const targetChineseName = LEGACY_INPUT_MAP[slot.name];
+        if (!targetChineseName) continue;
+
+        // 检查该节点中是否已经存在对应的中文新端口
+        const targetIdx = node.inputs.findIndex(inp => inp && inp.name === targetChineseName);
+        if (targetIdx !== -1 && targetIdx !== i) {
+            // 如果旧英文端口上有连线
+            if (slot.link != null) {
+                const targetSlot = node.inputs[targetIdx];
+                // 如果目标中文端口尚未连线，则将连线平滑迁移过去
+                if (targetSlot && targetSlot.link == null) {
+                    const linkId = slot.link;
+                    const graph = node.graph || app.graph;
+                    const linkObj = graph?.links?.[linkId] || graph?._links?.[linkId];
+                    if (linkObj) {
+                        linkObj.target_slot = targetIdx;
+                        targetSlot.link = linkId;
+                        slot.link = null;
+                    }
+                } else {
+                    // 若中文端口已有连线，安全断开旧端口
+                    if (typeof node.disconnectInput === "function") {
+                        node.disconnectInput(i);
+                    }
+                }
+            }
+            // 从节点上移除残留的旧英文端口
+            node.removeInput(i);
+            modified = true;
+        }
+    }
+
+    if (modified) {
+        if (typeof node.computeSize === "function") {
+            const sz = node.computeSize();
+            node.size[0] = Math.max(node.size[0], sz[0]);
+            node.size[1] = Math.max(node.size[1], sz[1]);
+        }
+        if (typeof node.setDirtyCanvas === "function") {
+            node.setDirtyCanvas(true, true);
+        }
+    }
+}
