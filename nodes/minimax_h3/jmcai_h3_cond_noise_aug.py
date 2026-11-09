@@ -18,9 +18,6 @@ H3 把参考图 / Add Guide 的引导帧 / 参考视频都当作"干净条件行
     visual_aug = 0.999  官方默认，完全不混噪
     visual_aug = 0.90~0.97  轻微混噪：油光 / 过饱和通常明显减轻，参考锁定力基本不变
     visual_aug < 0.85   参考开始"不牢"，人物长相与配色会漂移
-
-移植自 ComfyUI-YCNodes-MiniMax-H3 的 h3_cond_noise_aug.py，按 JMCAI 节点规范
-重命名为 JMCAI_H3CondNoiseAug，功能与参数保持一致。
 """
 
 import node_helpers
