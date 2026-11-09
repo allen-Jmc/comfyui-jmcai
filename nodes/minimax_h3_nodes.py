@@ -18,6 +18,7 @@ _MODULE_NAMES = (
     "minimax_i2v_tail",
     "h3_prompt_relay",
     "h3_tiled_sampler",
+    "jmcai_h3_cond_noise_aug",
 )
 
 _PACKAGE = __package__ or __name__.rpartition(".")[0]
