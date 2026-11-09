@@ -58,7 +58,22 @@
 
 ---
 
-### 📐 4. 尺寸助手系列 (`JMCAI❤/尺寸工具`)
+### 🎬 4. MiniMax H3 视频增强 (`JMCAI❤/MiniMax H3`)
+
+已内置原 MiniMax H3 节点包的 6 个节点，无需再额外安装该节点包。内部节点 ID 保持不变，已有工作流可直接复用。
+
+| 节点名称 | 功能说明 |
+|:---|:---|
+| **JMCAI MiniMax H3 Image to Video (Tail)** (`MiniMaxH3ImageToVideoTail`) | 二采条件节点；传入一采 `video_latent` 时透传并重算关键帧锚点。 |
+| **JMCAI H3 Prompt Relay** (`H3PromptRelay`) | 时间分段提示词控制，在 H3 打包自注意力中注入时间段惩罚 mask。 |
+| **JMCAI H3 Distance Attention Patcher** (`H3DistanceAttentionPatcher`) | 时空高斯感受野遮罩，限制中前期去噪时的局部注意力。 |
+| **JMCAI H3 Dynamic CFG Scheduler** (`H3DynamicCFGScheduler`) | 根据去噪阶段动态调整 CFG 引导强度。 |
+| **JMCAI H3 Sigma Refiner** (`H3SigmaRefiner`) | 在低 Sigma 区间局部加步，改善运动边缘的颗粒与闪烁。 |
+| **JMCAI H3 Tiled Sampler** (`H3TiledSampler`) | 空间分块采样与 cosine 融合，降低高分辨率精修显存压力。 |
+
+---
+
+### 📐 5. 尺寸助手系列 (`JMCAI❤/尺寸工具`)
 
 内置全主流文生图基模推荐分辨率，一键输出符合模型训练分布的最佳宽高：
 - **SD 1.5 尺寸助手** (`JmcAI_SD15ResolutionNode`)
@@ -73,7 +88,7 @@
 
 ---
 
-### 🌐 5. JMCAI 桌面端伴侣能力 (Companion Routes)
+### 🌐 6. JMCAI 桌面端伴侣能力 (Companion Routes)
 
 插件内置了 JMCAI 桌面端通信路由，支持远程 ComfyUI 运行环境自动探测与媒体资产直传：
 - `GET /jmcai/capabilities`：能力握手检测
